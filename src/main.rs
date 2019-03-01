@@ -1,6 +1,9 @@
 extern crate clap;
 use clap::{App, Arg};
 
+#[macro_use]
+extern crate json;
+
 fn run() -> Option<i64> {
     let matches = App::new("rjo")
         .version("0.1")
@@ -9,9 +12,11 @@ fn run() -> Option<i64> {
         .arg(Arg::with_name("something").multiple(true))
         .get_matches();
     let iterator = matches.values_of("something");
-    for el in iterator.unwrap() {
-        println!("{:?}", el);
+    let mut data = object! {};
+    for (i, el) in iterator.unwrap().enumerate() {
+        data[i.to_string()] = el.into();
     }
+    println!("{:#}", data);
     Some(0)
 }
 
