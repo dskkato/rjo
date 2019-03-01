@@ -6,13 +6,10 @@ fn run() -> Option<i64> {
         .version("0.1")
         .author("Daisuke Kato <kato.daisuke429@gmail.com>")
         .about("rjo is inspired by jo and gjo")
-        .arg(
-            Arg::with_name("something")
-                .multiple(true),
-        )
+        .arg(Arg::with_name("something").multiple(true))
         .get_matches();
     let iterator = matches.values_of("something");
-    for el in iterator.unwrap(){
+    for el in iterator.unwrap() {
         println!("{:?}", el);
     }
     Some(0)
