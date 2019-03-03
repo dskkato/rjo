@@ -10,7 +10,7 @@ fn parse_value(s: &str) -> json::JsonValue {
     }
 }
 
-fn do_object(args: clap::Values, data: &mut json::JsonValue) -> bool {
+fn do_object(args: clap::Values, data: &mut json::JsonValue) {
     for el in args {
         let kv: Vec<&str> = el.splitn(2, '=').collect();
         if kv.len() != 2 {
@@ -24,17 +24,15 @@ fn do_object(args: clap::Values, data: &mut json::JsonValue) -> bool {
         let (key, value) = (kv[0], kv[1]);
         data[key] = parse_value(value);
     }
-    true
 }
 
-fn do_array(args: clap::Values, data: &mut json::JsonValue) -> bool {
+fn do_array(args: clap::Values, data: &mut json::JsonValue) {
     for (i, value) in args.enumerate() {
         data[i] = parse_value(value);
     }
-    true
 }
 
-fn run() -> Option<i64> {
+fn run() -> Option<i32> {
     let matches = App::new("rjo")
         .version("0.1")
         .author("Daisuke Kato <kato.daisuke429@gmail.com>")
@@ -82,7 +80,7 @@ fn run() -> Option<i64> {
 
 fn main() {
     match run() {
-        Some(x) => println!("{:?}", x),
+        Some(x) => std::process::exit(x),
         None => print!(""),
     }
 }
