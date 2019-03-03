@@ -44,39 +44,32 @@ fn run() -> Result<bool> {
     let matches = App::new("rjo")
         .version("0.1")
         .author("Daisuke Kato <kato.daisuke429@gmail.com>")
-        .about("rjo inspired by jo and gjo  .")
+        .about("rjo inspired by jo and gjo.")
         .arg(
             Arg::with_name("object")
                 .takes_value(true)
                 .multiple(true)
-                .required(true)
-                .conflicts_with("array"),
+                .required(true),
         )
         .arg(
             Arg::with_name("array")
                 .short("a")
                 .long("array")
-                .help("creates an array of words")
-                .takes_value(true)
-                .multiple(true)
-                .conflicts_with("object"),
+                .help("Creates an array of words")
+                .multiple(true),
         )
         .arg(
             Arg::with_name("pretty-print")
                 .short("p")
                 .long("pretty")
-                .help("pretty-prints")
-                .takes_value(false),
+                .help("Pretty prints"),
         )
         .get_matches();
 
-    let data = if matches.is_present("object") {
-        do_object(matches.values_of("object").unwrap())
-    } else if matches.is_present("array") {
-        do_array(matches.values_of("array").unwrap())
+    let data = if matches.is_present("array") {
+        do_array(matches.values_of("object").unwrap())
     } else {
-        // something went wrong...
-        return Ok(false);
+        do_object(matches.values_of("object").unwrap())
     };
 
     let result = match matches.is_present("pretty-print") {
