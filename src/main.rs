@@ -4,42 +4,43 @@ extern crate clap;
 use clap::{App, Arg};
 
 extern crate json;
+use json::{Error, JsonValue, Result};
 
-fn parse_value(s: &str) -> json::JsonValue {
+fn parse_value(s: &str) -> JsonValue {
     match json::parse(s) {
         Ok(v) => v,
-        Err(_) => json::JsonValue::String(s.into()),
+        Err(_) => JsonValue::String(s.into()),
     }
 }
 
-fn do_object(args: clap::Values) -> json::JsonValue {
-    let mut data = json::JsonValue::new_object();
+fn do_object(args: clap::Values) -> Result<JsonValue> {
+    let mut data = JsonValue::new_object();
 
     for el in args {
         let kv: Vec<&str> = el.splitn(2, '=').collect();
         if kv.len() != 2 {
-            panic!("Argument {:?} is not k=v", el);
+            Error::WrongType(format!("Argument {:?} is not k=v", el));
         }
 
         if kv[0].len() == 0 {
-            panic!("An empty key is not allowed {:?}", el);
+            Error::WrongType(format!("An empty key is not allowed {:?}", el));
         }
 
         let (key, value) = (kv[0], kv[1]);
         data[key] = parse_value(value);
     }
-    data
+    Ok(data)
 }
 
-fn do_array(args: clap::Values) -> json::JsonValue {
-    let mut data = json::JsonValue::new_array();
+fn do_array(args: clap::Values) -> Result<JsonValue> {
+    let mut data = JsonValue::new_array();
     for (i, value) in args.enumerate() {
         data[i] = parse_value(value);
     }
-    data
+    Ok(data)
 }
 
-fn run() -> Option<i32> {
+fn run() -> Result<bool> {
     let matches = App::new("rjo")
         .version("0.1")
         .author("Daisuke Kato <kato.daisuke429@gmail.com>")
@@ -70,26 +71,27 @@ fn run() -> Option<i32> {
         .get_matches();
 
     let data = if matches.is_present("object") {
-        Some(do_object(matches.values_of("object").unwrap()))
+        do_object(matches.values_of("object").unwrap())
     } else if matches.is_present("array") {
-        Some(do_array(matches.values_of("array").unwrap()))
+        do_array(matches.values_of("array").unwrap())
     } else {
-        return Some(1);
+        return Err(Error::WrongType(String::from("Something went wrong...")));
     };
 
-    let result = if matches.is_present("pretty-print") {
-        format!("{:#}", json::stringify_pretty(data.unwrap(), 4))
-    } else {
-        format!("{:#}", json::stringify(data.unwrap()))
+    let result = match matches.is_present("pretty-print") {
+        true => format!("{:#}", json::stringify_pretty(data.unwrap(), 4)),
+        false => format!("{:#}", json::stringify(data.unwrap())),
     };
 
     println!("{:#}", result);
-    None
+    return Ok(true);
 }
 
 fn main() {
-    match run() {
-        Some(x) => process::exit(x),
-        None => print!(""),
+    let result = run();
+
+    match result {
+        Ok(true) => process::exit(0),
+        _ => process::exit(1),
     }
 }
