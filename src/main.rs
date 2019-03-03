@@ -4,6 +4,30 @@ use clap::{App, Arg};
 #[macro_use]
 extern crate json;
 
+fn do_object(args: clap::Values, data: &mut json::JsonValue) -> bool {
+    for el in args {
+        let kv: Vec<&str> = el.splitn(2, '=').collect();
+        if kv.len() != 2 {
+            panic!("Argument {:?} is not k=v", el);
+        }
+
+        if kv[0].len() == 0 {
+            panic!("An empty key is not allowed {:?}", el);
+        }
+
+        let (key, value) = (kv[0], kv[1]);
+        data[key] = value.into();
+    }
+    true
+}
+
+fn do_array(args: clap::Values, data: &mut json::JsonValue) -> bool {
+    for (i, el) in args.enumerate() {
+        data[i] = el.into();
+    }
+    true
+}
+
 fn run() -> Option<i64> {
     let matches = App::new("rjo")
         .version("0.1")
@@ -19,35 +43,27 @@ fn run() -> Option<i64> {
         .arg(
             Arg::with_name("array")
                 .short("a")
+                .long("array")
+                .help("creates an array of words")
                 .takes_value(true)
                 .multiple(true)
                 .conflicts_with("object"),
         )
-        .arg(Arg::with_name("pretty-print").short("p"))
+        .arg(
+            Arg::with_name("pretty-print")
+                .short("p")
+                .long("pretty")
+                .help("pretty-prints")
+                .takes_value(false),
+        )
         .get_matches();
 
     let mut data = object! {};
 
     if matches.is_present("object") {
-        let iterator = matches.values_of("object").unwrap();
-        for el in iterator {
-            let kv: Vec<&str> = el.splitn(2, '=').collect();
-            if kv.len() != 2 {
-                panic!("Argument {:?} is not k=v", el);
-            }
-
-            if kv[0].len() == 0 {
-                panic!("An empty key is not allowed {:?}", el);
-            }
-
-            let (key, value) = (kv[0], kv[1]);
-            data[key] = value.into();
-        }
+        do_object(matches.values_of("object").unwrap(), &mut data);
     } else if matches.is_present("array") {
-        let iterator = matches.values_of("array").unwrap();
-        for (i, el) in iterator.enumerate() {
-            data[i] = el.into();
-        }
+        do_array(matches.values_of("array").unwrap(), &mut data);
     }
 
     if matches.is_present("pretty-print") {
