@@ -1,3 +1,5 @@
+use std::process;
+
 extern crate clap;
 use clap::{App, Arg};
 
@@ -10,7 +12,9 @@ fn parse_value(s: &str) -> json::JsonValue {
     }
 }
 
-fn do_object(args: clap::Values, data: &mut json::JsonValue) {
+fn do_object(args: clap::Values) -> json::JsonValue {
+    let mut data = json::JsonValue::new_object();
+
     for el in args {
         let kv: Vec<&str> = el.splitn(2, '=').collect();
         if kv.len() != 2 {
@@ -24,12 +28,15 @@ fn do_object(args: clap::Values, data: &mut json::JsonValue) {
         let (key, value) = (kv[0], kv[1]);
         data[key] = parse_value(value);
     }
+    data
 }
 
-fn do_array(args: clap::Values, data: &mut json::JsonValue) {
+fn do_array(args: clap::Values) -> json::JsonValue {
+    let mut data = json::JsonValue::new_array();
     for (i, value) in args.enumerate() {
         data[i] = parse_value(value);
     }
+    data
 }
 
 fn run() -> Option<i32> {
@@ -62,25 +69,27 @@ fn run() -> Option<i32> {
         )
         .get_matches();
 
-    let mut data = json::JsonValue::new_object();
-
-    if matches.is_present("object") {
-        do_object(matches.values_of("object").unwrap(), &mut data);
+    let data = if matches.is_present("object") {
+        Some(do_object(matches.values_of("object").unwrap()))
     } else if matches.is_present("array") {
-        do_array(matches.values_of("array").unwrap(), &mut data);
-    }
-
-    if matches.is_present("pretty-print") {
-        println!("{:#}", data);
+        Some(do_array(matches.values_of("array").unwrap()))
     } else {
-        println!("{:#}", data.dump());
-    }
+        return Some(1);
+    };
+
+    let result = if matches.is_present("pretty-print") {
+        format!("{:#}", json::stringify_pretty(data.unwrap(), 4))
+    } else {
+        format!("{:#}", json::stringify(data.unwrap()))
+    };
+
+    println!("{:#}", result);
     None
 }
 
 fn main() {
     match run() {
-        Some(x) => std::process::exit(x),
+        Some(x) => process::exit(x),
         None => print!(""),
     }
 }
