@@ -75,7 +75,8 @@ fn run() -> Result<bool> {
     } else if matches.is_present("array") {
         do_array(matches.values_of("array").unwrap())
     } else {
-        return Err(Error::WrongType(String::from("Something went wrong...")));
+        // something went wrong...
+        return Ok(false);
     };
 
     let result = match matches.is_present("pretty-print") {
