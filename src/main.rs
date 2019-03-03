@@ -44,7 +44,7 @@ fn run() -> Result<bool> {
     let matches = App::new("rjo")
         .version("0.1")
         .author("Daisuke Kato <kato.daisuke429@gmail.com>")
-        .about("rjo is inspired by jo and gjo")
+        .about("rjo inspired by jo and gjo  .")
         .arg(
             Arg::with_name("object")
                 .takes_value(true)
