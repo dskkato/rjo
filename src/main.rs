@@ -1,8 +1,14 @@
 extern crate clap;
 use clap::{App, Arg};
 
-#[macro_use]
 extern crate json;
+
+fn parse_value(s: &str) -> json::JsonValue {
+    match json::parse(s) {
+        Ok(v) => v,
+        Err(_) => json::JsonValue::String(s.into()),
+    }
+}
 
 fn do_object(args: clap::Values, data: &mut json::JsonValue) -> bool {
     for el in args {
@@ -16,14 +22,14 @@ fn do_object(args: clap::Values, data: &mut json::JsonValue) -> bool {
         }
 
         let (key, value) = (kv[0], kv[1]);
-        data[key] = value.into();
+        data[key] = parse_value(value);
     }
     true
 }
 
 fn do_array(args: clap::Values, data: &mut json::JsonValue) -> bool {
-    for (i, el) in args.enumerate() {
-        data[i] = el.into();
+    for (i, value) in args.enumerate() {
+        data[i] = parse_value(value);
     }
     true
 }
@@ -58,7 +64,7 @@ fn run() -> Option<i64> {
         )
         .get_matches();
 
-    let mut data = object! {};
+    let mut data = json::JsonValue::new_object();
 
     if matches.is_present("object") {
         do_object(matches.values_of("object").unwrap(), &mut data);
