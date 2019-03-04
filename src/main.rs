@@ -43,11 +43,11 @@ mod parse_value {
 
 }
 
-fn do_object(args: clap::Values) -> Result<JsonValue> {
+fn do_object(args: &[&str]) -> Result<JsonValue> {
     let mut data = JsonValue::new_object();
 
     for el in args {
-        let kv: Vec<&str> = el.splitn(2, '=').collect();
+        let kv: Vec<_> = el.splitn(2, '=').collect();
         if kv.len() != 2 {
             Error::WrongType(format!("Argument {:?} is not k=v", el));
         }
@@ -62,10 +62,10 @@ fn do_object(args: clap::Values) -> Result<JsonValue> {
     Ok(data)
 }
 
-fn do_array(args: clap::Values) -> Result<JsonValue> {
+fn do_array(args: &[&str]) -> Result<JsonValue> {
     let mut data = JsonValue::new_array();
-    for (i, value) in args.enumerate() {
-        data[i] = parse_value(value);
+    for value in args.iter() {
+        data.push(parse_value(value))?;
     }
     Ok(data)
 }
@@ -79,14 +79,14 @@ fn run() -> Result<bool> {
             Arg::with_name("object")
                 .takes_value(true)
                 .multiple(true)
-                .required(true),
+                .required(true)
+                .help("Creates a JSON object from k=v pairs")
         )
         .arg(
             Arg::with_name("array")
                 .short("a")
                 .long("array")
                 .help("Creates an array of words")
-                .multiple(true),
         )
         .arg(
             Arg::with_name("pretty-print")
@@ -96,15 +96,16 @@ fn run() -> Result<bool> {
         )
         .get_matches();
 
-    let data = if matches.is_present("array") {
-        do_array(matches.values_of("object").unwrap())
-    } else {
-        do_object(matches.values_of("object").unwrap())
+    let args: Vec<_> = matches.values_of("object").unwrap().collect();
+
+    let data = match matches.is_present("array") {
+        true => do_array(&args).unwrap(),
+        false => do_object(&args).unwrap(),
     };
 
     let result = match matches.is_present("pretty-print") {
-        true => format!("{:#}", json::stringify_pretty(data.unwrap(), 4)),
-        false => format!("{:#}", json::stringify(data.unwrap())),
+        true => data.pretty(4u16),
+        false => data.dump(),
     };
 
     println!("{:#}", result);
