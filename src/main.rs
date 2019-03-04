@@ -3,6 +3,10 @@ use std::process;
 extern crate clap;
 use clap::{App, Arg};
 
+#[cfg(test)]
+#[macro_use]
+extern crate json;
+#[cfg(not(test))]
 extern crate json;
 use json::{Error, JsonValue, Result};
 
@@ -11,6 +15,32 @@ fn parse_value(s: &str) -> JsonValue {
         Ok(v) => v,
         Err(_) => JsonValue::String(s.into()),
     }
+}
+
+#[cfg(test)]
+mod parse_value {
+    use super::*;
+
+    #[test]
+    fn test_str_str() {
+        let s = String::from("{\"a\":\"b\"}");
+        let o = object! {
+            "a" => "b"
+        };
+        assert_eq!(o, parse_value(&s));
+    }
+
+    #[test]
+    fn test_str_object() {
+        let s = String::from("{\"a\":{\"b\":\"c\"}}");
+        let o = object! {
+            "a" => object! {
+                "b" => "c"
+            }
+        };
+        assert_eq!(o, parse_value(&s));
+    }
+
 }
 
 fn do_object(args: clap::Values) -> Result<JsonValue> {
