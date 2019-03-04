@@ -22,7 +22,7 @@ mod parse_value {
     use super::*;
 
     #[test]
-    fn test_str_str() {
+    fn str_str() {
         let s = String::from("{\"a\":\"b\"}");
         let o = object! {
             "a" => "b"
@@ -31,7 +31,7 @@ mod parse_value {
     }
 
     #[test]
-    fn test_str_object() {
+    fn str_object() {
         let s = String::from("{\"a\":{\"b\":\"c\"}}");
         let o = object! {
             "a" => object! {
