@@ -13,7 +13,7 @@ Clone and specify local directory:
 ```sh
 $ git clone https://github.com/dskkato/rjo.git
 $ cd rjo
-$ cargo install --path . 
+$ cargo install --path .
 ```
 
 Or specify the repository directly:
@@ -32,6 +32,16 @@ $ rjo -p name=jo n=17 parser=false
     "n": 17,
     "parser": false
 }
+```
+
+Arrays:
+```
+$ rjo -p -a Rust 0 false
+[
+    "Rust",
+    0,
+    false
+]
 ```
 
 A more complex example:
