@@ -1,6 +1,7 @@
 # rjo
 
 [![Build Status](https://travis-ci.org/dskkato/rjo.svg?branch=master)](https://travis-ci.org/dskkato/rjo)
+[![Build status](https://ci.appveyor.com/api/projects/status/9cu385votebtm92e/branch/master?svg=true)](https://ci.appveyor.com/project/dskkato/rjo)
 
 A small utility to create JSON objects.
 
