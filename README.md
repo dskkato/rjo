@@ -1,5 +1,7 @@
 # rjo
 
+[![Build Status](https://travis-ci.org/dskkato/rjo.svg?branch=master)](https://travis-ci.org/dskkato/rjo)
+
 A small utility to create JSON objects.
 
 The origin of this package is [jpmens/jo](https://github.com/jpmens/jo), and was inspired by a Golang ported version , [skanehira/gjo](https://github.com/skanehira/gjo).
