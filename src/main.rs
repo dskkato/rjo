@@ -13,7 +13,7 @@ use json::{Error, JsonValue, Result};
 fn parse_value(s: &str) -> JsonValue {
     match json::parse(s) {
         Ok(v) => v,
-        Err(_) => JsonValue::String(s.into()),
+        Err(_) => s.into(),
     }
 }
 
@@ -105,11 +105,11 @@ fn run() -> Result<bool> {
     };
 
     let result = match matches.is_present("pretty-print") {
-        true => data.pretty(4u16),
-        false => data.dump(),
+        true => json::stringify_pretty(data, 4u16),
+        false => json::stringify(data),
     };
 
-    println!("{:#}", result);
+    println!("{}", result);
     return Ok(true);
 }
 
