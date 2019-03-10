@@ -1,5 +1,6 @@
 use std::process;
 
+#[macro_use]
 extern crate clap;
 use clap::{App, AppSettings, Arg};
 
@@ -68,10 +69,10 @@ fn do_array(args: &[&str]) -> Result<JsonValue> {
 }
 
 fn run() -> Result<bool> {
-    let matches = App::new("rjo")
-        .version("0.1")
-        .author("Daisuke Kato <kato.daisuke429@gmail.com>")
-        .about("rjo inspired by jo and gjo.")
+    let matches = App::new(crate_name!())
+        .version(crate_version!())
+        .author(crate_authors!("\n"))
+        .about(crate_description!())
         .setting(AppSettings::AllowNegativeNumbers)
         .arg(
             Arg::with_name("object")
