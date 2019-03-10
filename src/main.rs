@@ -97,7 +97,7 @@ fn run() -> Result<bool> {
         )
         .get_matches();
 
-    let args: Vec<_> = matches.values_of("object").unwrap().collect();
+    let args: Vec<&str> = matches.values_of("object").unwrap().collect();
 
     let data = match matches.is_present("array") {
         true => do_array(&args).unwrap(),
