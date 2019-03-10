@@ -73,6 +73,8 @@ fn run() -> Result<bool> {
         .author("Daisuke Kato <kato.daisuke429@gmail.com>")
         .about("rjo inspired by jo and gjo.")
         .setting(AppSettings::AllowLeadingHyphen)
+        .setting(AppSettings::AllowNegativeNumbers)
+        .setting(AppSettings::AllArgsOverrideSelf)
         .arg(
             Arg::with_name("object")
                 .takes_value(true)
