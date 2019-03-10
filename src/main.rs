@@ -1,14 +1,11 @@
 use std::process;
 
 extern crate clap;
-use clap::{App, Arg};
+use clap::{App, AppSettings, Arg};
 
-#[cfg(test)]
 #[macro_use]
 extern crate json;
-#[cfg(not(test))]
-extern crate json;
-use json::{Error, JsonValue, Result};
+use json::{JsonValue, Result};
 
 fn parse_value(s: &str) -> JsonValue {
     match json::parse(s) {
@@ -44,16 +41,16 @@ mod parse_value {
 }
 
 fn do_object(args: &[&str]) -> Result<JsonValue> {
-    let mut data = JsonValue::new_object();
+    let mut data = object! {};
 
     for el in args {
         let kv: Vec<_> = el.splitn(2, '=').collect();
         if kv.len() != 2 {
-            Error::WrongType(format!("Argument {:?} is not k=v", el));
+            panic!(format!("Argument {:?} is not k=v", el));
         }
 
         if kv[0].len() == 0 {
-            Error::WrongType(format!("An empty key is not allowed {:?}", el));
+            panic!(format!("An empty key is not allowed {:?}", el));
         }
 
         let (key, value) = (kv[0], kv[1]);
@@ -63,7 +60,7 @@ fn do_object(args: &[&str]) -> Result<JsonValue> {
 }
 
 fn do_array(args: &[&str]) -> Result<JsonValue> {
-    let mut data = JsonValue::new_array();
+    let mut data = array! {};
     for value in args.iter() {
         data.push(parse_value(value))?;
     }
@@ -75,7 +72,7 @@ fn run() -> Result<bool> {
         .version("0.1")
         .author("Daisuke Kato <kato.daisuke429@gmail.com>")
         .about("rjo inspired by jo and gjo.")
-        .setting(clap::AppSettings::AllowLeadingHyphen)
+        .setting(AppSettings::AllowLeadingHyphen)
         .arg(
             Arg::with_name("object")
                 .takes_value(true)
