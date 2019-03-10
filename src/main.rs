@@ -75,18 +75,19 @@ fn run() -> Result<bool> {
         .version("0.1")
         .author("Daisuke Kato <kato.daisuke429@gmail.com>")
         .about("rjo inspired by jo and gjo.")
+        .setting(clap::AppSettings::AllowLeadingHyphen)
         .arg(
             Arg::with_name("object")
                 .takes_value(true)
                 .multiple(true)
                 .required(true)
-                .help("Creates a JSON object from k=v pairs")
+                .help("Creates a JSON object from k=v pairs"),
         )
         .arg(
             Arg::with_name("array")
                 .short("a")
                 .long("array")
-                .help("Creates an array of words")
+                .help("Creates an array of words"),
         )
         .arg(
             Arg::with_name("pretty-print")
