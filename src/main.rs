@@ -20,29 +20,20 @@ mod parse_value {
     use super::*;
 
     #[test]
-    fn test_str_str() {
-        let s = String::from("{\"a\":\"b\"}");
-        let o = object! {
-            "a" => "b"
-        };
-        assert_eq!(o, parse_value(&s));
-    }
-
-    #[test]
-    fn test_str_object() {
-        let s = String::from("{\"a\":{\"b\":\"c\"}}");
+    fn test_return_object() {
+        let s = "{\"a\":{\"b\":\"c\"}}";
         let o = object! {
             "a" => object! {
                 "b" => "c"
             }
         };
-        assert_eq!(o, parse_value(&s));
+        assert_eq!(o, parse_value(s));
     }
 
     #[test]
     fn test_return_str() {
-        let s = String::from("aaa");
-        assert_eq!(JsonValue::String(s.clone()), parse_value(&s));
+        let s = "a";
+        assert_eq!(JsonValue::String(s.to_owned()), parse_value(s));
     }
 
 }
@@ -53,15 +44,15 @@ mod do_object {
 
     #[test]
     fn test_do_object() {
-        let s = vec!["a=b", "b=true", "c=1", "d=-1"];
+        let s = ["a=b", "b=true", "c=1", "d=-1"];
         let result = do_object(&s).unwrap();
-        let answer = object! {
+        let expected = object! {
             "a" => "b",
             "b" => true,
             "c" => 1,
             "d" => -1,
         };
-        assert_eq!(answer, result);
+        assert_eq!(expected, result);
     }
 }
 
@@ -90,10 +81,10 @@ mod do_array {
 
     #[test]
     fn test_do_array() {
-        let s = vec!["b", "true", "1", "-1"];
+        let s = ["b", "true", "1", "-1"];
         let result = do_array(&s).unwrap();
-        let answer = array!["b", true, 1, -1];
-        assert_eq!(answer, result);
+        let expected = array!["b", true, 1, -1];
+        assert_eq!(expected, result);
     }
 }
 
