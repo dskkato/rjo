@@ -39,6 +39,30 @@ mod parse_value {
         assert_eq!(o, parse_value(&s));
     }
 
+    #[test]
+    fn test_return_str() {
+        let s = String::from("aaa");
+        assert_eq!(JsonValue::String(s.clone()), parse_value(&s));
+    }
+
+}
+
+#[cfg(test)]
+mod do_object {
+    use super::*;
+
+    #[test]
+    fn test_do_object() {
+        let s = vec!["a=b", "b=true", "c=1", "d=-1"];
+        let result = do_object(&s).unwrap();
+        let answer = object! {
+            "a" => "b",
+            "b" => true,
+            "c" => 1,
+            "d" => -1,
+        };
+        assert_eq!(answer, result);
+    }
 }
 
 fn do_object(args: &[&str]) -> Result<JsonValue> {
@@ -58,6 +82,19 @@ fn do_object(args: &[&str]) -> Result<JsonValue> {
         data[key] = parse_value(value);
     }
     Ok(data)
+}
+
+#[cfg(test)]
+mod do_array {
+    use super::*;
+
+    #[test]
+    fn test_do_array() {
+        let s = vec!["b", "true", "1", "-1"];
+        let result = do_array(&s).unwrap();
+        let answer = array!["b", true, 1, -1];
+        assert_eq!(answer, result);
+    }
 }
 
 fn do_array(args: &[&str]) -> Result<JsonValue> {
