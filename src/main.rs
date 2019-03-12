@@ -100,30 +100,29 @@ fn run() -> Result<bool> {
     let matches = App::new(crate_name!())
         .version(crate_version!())
         .author(crate_authors!("\n"))
-        .about(crate_description!())
         .setting(AppSettings::AllowNegativeNumbers)
         .arg(
-            Arg::with_name("object")
+            Arg::with_name("word")
                 .takes_value(true)
                 .multiple(true)
                 .required(true)
-                .help("Creates a JSON object from k=v pairs"),
+                .help("word is key=value"),
         )
         .arg(
             Arg::with_name("array")
                 .short("a")
                 .long("array")
-                .help("Creates an array of words"),
+                .help("creates an array of words"),
         )
         .arg(
             Arg::with_name("pretty-print")
                 .short("p")
                 .long("pretty")
-                .help("Pretty prints"),
+                .help("pretty-prints JSON on output"),
         )
         .get_matches();
 
-    let args: Vec<&str> = matches.values_of("object").unwrap().collect();
+    let args: Vec<&str> = matches.values_of("word").unwrap().collect();
 
     let data = match matches.is_present("array") {
         true => do_array(&args).unwrap(),
