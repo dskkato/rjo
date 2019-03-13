@@ -36,6 +36,18 @@ mod parse_value {
         assert_eq!(JsonValue::String(s.to_owned()), parse_value(s));
     }
 
+    #[test]
+    fn test_return_true() {
+        let s = "true";
+        assert_eq!(JsonValue::Boolean(true), parse_value(s));
+    }
+
+    #[test]
+    fn test_return_number() {
+        let s = "123";
+        assert_eq!(JsonValue::Number(123.into()), parse_value(s));
+    }
+
 }
 
 #[cfg(test)]
