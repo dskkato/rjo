@@ -48,9 +48,7 @@ fn do_array(args: clap::Values) -> Result<JsonValue> {
     Ok(data)
 }
 
-fn run() -> Result<bool> {
-    let matches = get_app().get_matches();
-
+fn run(matches: clap::ArgMatches) -> Result<bool> {
     let args = matches.values_of(WORD).unwrap();
 
     let data = if matches.is_present(ARRAY) {
@@ -73,7 +71,8 @@ fn run() -> Result<bool> {
 }
 
 fn main() {
-    let result = run();
+    let matches = get_app().get_matches();
+    let result = run(matches);
 
     match result {
         Ok(true) => process::exit(0),
