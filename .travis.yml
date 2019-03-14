@@ -10,6 +10,6 @@ matrix:
 before_script:
   - rustup component add clippy
 script:
-  - cargo clippy -D warnings
+  - cargo clippy -- -D warnings
   - cargo test
   - cargo build --release
