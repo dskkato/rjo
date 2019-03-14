@@ -69,3 +69,19 @@ fn test_object() {
 
     assert_eq!(Ok(true), run(matches));
 }
+
+#[test]
+#[should_panic]
+fn test_panic1() {
+    let args = vec![crate_name!(), "a"];
+    let matches = get_app().get_matches_from(args);
+    run(matches).unwrap();
+}
+
+#[test]
+#[should_panic]
+fn test_panic() {
+    let args = vec![crate_name!(), "=a"];
+    let matches = get_app().get_matches_from(args);
+    run(matches).unwrap();
+}
