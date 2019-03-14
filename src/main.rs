@@ -67,11 +67,8 @@ fn run() -> Result<bool> {
 
     let stdout = io::stdout();
     let mut handle = stdout.lock();
-    handle
-        .write_all(result.as_bytes())
-        .expect("Failed to write to stdout");
+    writeln!(handle, "{}", result).expect("Failed to write");
 
-    // println!("{}", result);
     Ok(true)
 }
 
