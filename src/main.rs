@@ -10,65 +10,12 @@ use json::{JsonValue, Result};
 mod app;
 use app::{get_app, ARRAY, WORD};
 
+mod tests;
+
 fn parse_value(s: &str) -> JsonValue {
     match json::parse(s) {
         Ok(v) => v,
         Err(_) => s.into(),
-    }
-}
-
-#[cfg(test)]
-mod parse_value {
-    use super::*;
-
-    #[test]
-    fn test_return_object() {
-        let s = "{\"a\":{\"b\":\"c\"}}";
-        let o = object! {
-            "a" => object! {
-                "b" => "c"
-            }
-        };
-        assert_eq!(o, parse_value(s));
-    }
-
-    #[test]
-    fn test_return_str() {
-        let s = "a";
-        assert_eq!(JsonValue::String(s.to_owned()), parse_value(s));
-    }
-
-    #[test]
-    fn test_return_true() {
-        let s = "true";
-        assert_eq!(JsonValue::Boolean(true), parse_value(s));
-    }
-
-    #[test]
-    fn test_return_number() {
-        let s = "123";
-        assert_eq!(JsonValue::Number(123.into()), parse_value(s));
-    }
-
-}
-
-#[cfg(test)]
-mod do_object {
-    use super::*;
-
-    #[test]
-    fn test_do_object() {
-        let args = vec![crate_name!(), "a=b", "b=true", "c=1", "d=-1"];
-        let matches = get_app().get_matches_from(args);
-
-        let result = do_object(matches.values_of(WORD).unwrap());
-        let expected = object! {
-            "a" => "b",
-            "b" => true,
-            "c" => 1,
-            "d" => -1,
-        };
-        assert_eq!(expected, result.unwrap());
     }
 }
 
@@ -89,21 +36,6 @@ fn do_object(args: clap::Values) -> Result<JsonValue> {
         data[key] = parse_value(value);
     }
     Ok(data)
-}
-
-#[cfg(test)]
-mod do_array {
-    use super::*;
-
-    #[test]
-    fn test_do_array() {
-        let args = vec![crate_name!(), "-a", "b", "true", "1", "-1"];
-        let matches = get_app().get_matches_from(args);
-
-        let result = do_array(matches.values_of(WORD).unwrap());
-        let expected = array!["b", true, 1, -1];
-        assert_eq!(expected, result.unwrap());
-    }
 }
 
 fn do_array(args: clap::Values) -> Result<JsonValue> {
