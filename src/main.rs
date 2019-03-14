@@ -1,3 +1,4 @@
+use std::io::{self, Write};
 use std::process;
 
 #[macro_use]
@@ -64,7 +65,10 @@ fn run() -> Result<bool> {
         json::stringify(data)
     };
 
-    println!("{}", result);
+    let stdout = io::stdout();
+    let mut handle = stdout.lock();
+    writeln!(handle, "{}", result).expect("Failed to write");
+
     Ok(true)
 }
 
