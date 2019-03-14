@@ -8,34 +8,8 @@ use clap::{App, AppSettings, Arg};
 extern crate json;
 use json::{JsonValue, Result};
 
-static WORD: &'static str = "word";
-static ARRAY: &'static str = "array";
-
-fn get_app() -> clap::App<'static, 'static> {
-    App::new(crate_name!())
-        .version(crate_version!())
-        .author(crate_authors!("\n"))
-        .setting(AppSettings::AllowNegativeNumbers)
-        .arg(
-            Arg::with_name(WORD)
-                .takes_value(true)
-                .multiple(true)
-                .required(true)
-                .help("word is key=value"),
-        )
-        .arg(
-            Arg::with_name(ARRAY)
-                .short("a")
-                .long(ARRAY)
-                .help("creates an array of words"),
-        )
-        .arg(
-            Arg::with_name("pretty-print")
-                .short("p")
-                .long("pretty")
-                .help("pretty-prints JSON on output"),
-        )
-}
+mod app;
+use app::{get_app, ARRAY, WORD};
 
 fn parse_value(s: &str) -> JsonValue {
     match json::parse(s) {
