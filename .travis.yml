@@ -7,7 +7,9 @@ matrix:
   allow_failures:
     - rust: nightly
   fast_finish: true
+before_script:
+  - rustup component add clippy
 script:
-   - rustup component add clippy
-  - cargo build
-  - cargo clippy
+  - cargo clippy -- --all-targets --all-features -D warnings
+  - cargo test
+  - cargo build --release
