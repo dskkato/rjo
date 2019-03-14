@@ -8,8 +8,34 @@ use clap::{App, AppSettings, Arg};
 extern crate json;
 use json::{JsonValue, Result};
 
-static KEY_WORD: &'static str = "word";
-static KEY_ARRAY: &'static str = "array";
+static WORD: &'static str = "word";
+static ARRAY: &'static str = "array";
+
+fn get_app() -> clap::App<'static, 'static> {
+    App::new(crate_name!())
+        .version(crate_version!())
+        .author(crate_authors!("\n"))
+        .setting(AppSettings::AllowNegativeNumbers)
+        .arg(
+            Arg::with_name(WORD)
+                .takes_value(true)
+                .multiple(true)
+                .required(true)
+                .help("word is key=value"),
+        )
+        .arg(
+            Arg::with_name(ARRAY)
+                .short("a")
+                .long(ARRAY)
+                .help("creates an array of words"),
+        )
+        .arg(
+            Arg::with_name("pretty-print")
+                .short("p")
+                .long("pretty")
+                .help("pretty-prints JSON on output"),
+        )
+}
 
 fn parse_value(s: &str) -> JsonValue {
     match json::parse(s) {
@@ -59,23 +85,25 @@ mod do_object {
 
     #[test]
     fn test_do_object() {
-        let s = ["a=b", "b=true", "c=1", "d=-1"];
-        let result = do_object(&s).unwrap();
+        let args = vec![crate_name!(), "a=b", "b=true", "c=1", "d=-1"];
+        let matches = get_app().get_matches_from(args);
+
+        let result = do_object(matches.values_of(WORD).unwrap());
         let expected = object! {
             "a" => "b",
             "b" => true,
             "c" => 1,
             "d" => -1,
         };
-        assert_eq!(expected, result);
+        assert_eq!(expected, result.unwrap());
     }
 }
 
-fn do_object(args: &[&str]) -> Result<JsonValue> {
+fn do_object(args: clap::Values) -> Result<JsonValue> {
     let mut data = object! {};
 
     for el in args {
-        let kv: Vec<_> = el.splitn(2, '=').collect();
+        let kv: Vec<&str> = el.splitn(2, '=').collect();
         if kv.len() != 2 {
             panic!(format!("Argument {:?} is not k=v", el));
         }
@@ -96,52 +124,32 @@ mod do_array {
 
     #[test]
     fn test_do_array() {
-        let s = ["b", "true", "1", "-1"];
-        let result = do_array(&s).unwrap();
+        let args = vec![crate_name!(), "-a", "b", "true", "1", "-1"];
+        let matches = get_app().get_matches_from(args);
+
+        let result = do_array(matches.values_of(WORD).unwrap());
         let expected = array!["b", true, 1, -1];
-        assert_eq!(expected, result);
+        assert_eq!(expected, result.unwrap());
     }
 }
 
-fn do_array(args: &[&str]) -> Result<JsonValue> {
+fn do_array(args: clap::Values) -> Result<JsonValue> {
     let mut data = array! {};
-    for value in args.iter() {
+    for value in args {
+        println!("{}", value.clone());
         data.push(parse_value(value))?;
     }
     Ok(data)
 }
 
 fn run() -> Result<bool> {
-    let matches = App::new(crate_name!())
-        .version(crate_version!())
-        .author(crate_authors!("\n"))
-        .setting(AppSettings::AllowNegativeNumbers)
-        .arg(
-            Arg::with_name(KEY_WORD)
-                .takes_value(true)
-                .multiple(true)
-                .required(true)
-                .help("word is key=value"),
-        )
-        .arg(
-            Arg::with_name(KEY_ARRAY)
-                .short("a")
-                .long(KEY_ARRAY)
-                .help("creates an array of words"),
-        )
-        .arg(
-            Arg::with_name("pretty-print")
-                .short("p")
-                .long("pretty")
-                .help("pretty-prints JSON on output"),
-        )
-        .get_matches();
+    let matches = get_app().get_matches();
 
-    let args: Vec<&str> = matches.values_of(KEY_WORD).unwrap().collect();
+    let args = matches.values_of(WORD).unwrap();
 
-    let data = match matches.is_present(KEY_ARRAY) {
-        true => do_array(&args).unwrap(),
-        false => do_object(&args).unwrap(),
+    let data = match matches.is_present(ARRAY) {
+        true => do_array(args).unwrap(),
+        false => do_object(args).unwrap(),
     };
 
     let result = match matches.is_present("pretty-print") {
