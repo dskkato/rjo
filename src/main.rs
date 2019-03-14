@@ -65,8 +65,9 @@ fn run() -> Result<bool> {
         json::stringify(data)
     };
 
-    io::stdout()
-        .lock()
+    let stdout = io::stdout();
+    let mut handle = stdout.lock();
+    handle
         .write_all(result.as_bytes())
         .expect("Failed to write to stdout");
 
