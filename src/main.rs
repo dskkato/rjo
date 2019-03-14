@@ -10,6 +10,7 @@ use json::{JsonValue, Result};
 mod app;
 use app::{get_app, ARRAY, WORD};
 
+#[cfg(test)]
 mod tests;
 
 fn parse_value(s: &str) -> JsonValue {
