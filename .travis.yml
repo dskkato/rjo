@@ -8,6 +8,6 @@ matrix:
     - rust: nightly
   fast_finish: true
 script:
-  - cargo install clippy
+   - rustup component add clippy
   - cargo build
   - cargo clippy
