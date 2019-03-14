@@ -2,7 +2,6 @@ use std::process;
 
 #[macro_use]
 extern crate clap;
-use clap::{App, AppSettings, Arg};
 
 #[macro_use]
 extern crate json;
@@ -110,7 +109,6 @@ mod do_array {
 fn do_array(args: clap::Values) -> Result<JsonValue> {
     let mut data = array! {};
     for value in args {
-        println!("{}", value.clone());
         data.push(parse_value(value))?;
     }
     Ok(data)

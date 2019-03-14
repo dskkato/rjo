@@ -1,10 +1,9 @@
-#[macro_use]
 use clap::{App, AppSettings, Arg};
 
 pub static WORD: &'static str = "word";
 pub static ARRAY: &'static str = "array";
 
-pub fn get_app() -> clap::App<'static, 'static> {
+pub fn get_app() -> App<'static, 'static> {
     App::new(crate_name!())
         .version(crate_version!())
         .author(crate_authors!("\n"))
