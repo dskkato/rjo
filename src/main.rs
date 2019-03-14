@@ -29,7 +29,7 @@ fn do_object(args: clap::Values) -> Result<JsonValue> {
             panic!(format!("Argument {:?} is not k=v", el));
         }
 
-        if kv[0].len() == 0 {
+        if kv[0].is_empty() {
             panic!(format!("An empty key is not allowed {:?}", el));
         }
 
@@ -52,18 +52,20 @@ fn run() -> Result<bool> {
 
     let args = matches.values_of(WORD).unwrap();
 
-    let data = match matches.is_present(ARRAY) {
-        true => do_array(args).unwrap(),
-        false => do_object(args).unwrap(),
+    let data = if matches.is_present(ARRAY) {
+        do_array(args).unwrap()
+    } else {
+        do_object(args).unwrap()
     };
 
-    let result = match matches.is_present("pretty-print") {
-        true => json::stringify_pretty(data, 4),
-        false => json::stringify(data),
+    let result = if matches.is_present("pretty-print") {
+        json::stringify_pretty(data, 4)
+    } else {
+        json::stringify(data)
     };
 
     println!("{}", result);
-    return Ok(true);
+    Ok(true)
 }
 
 fn main() {
