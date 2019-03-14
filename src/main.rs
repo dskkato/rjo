@@ -1,5 +1,5 @@
-use std::process;
 use std::io::{self, Write};
+use std::process;
 
 #[macro_use]
 extern crate clap;
@@ -65,10 +65,11 @@ fn run() -> Result<bool> {
         json::stringify(data)
     };
 
-    let mut handle = io::stdout();
-    handle.lock();
-    handle.write(result.as_bytes());
-        
+    io::stdout()
+        .lock()
+        .write_all(result.as_bytes())
+        .expect("Failed to write to stdout");
+
     // println!("{}", result);
     Ok(true)
 }
