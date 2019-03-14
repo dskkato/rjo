@@ -8,6 +8,9 @@ use clap::{App, AppSettings, Arg};
 extern crate json;
 use json::{JsonValue, Result};
 
+static KEY_WORD: &'static str = "word";
+static KEY_ARRAY: &'static str = "array";
+
 fn parse_value(s: &str) -> JsonValue {
     match json::parse(s) {
         Ok(v) => v,
@@ -114,16 +117,16 @@ fn run() -> Result<bool> {
         .author(crate_authors!("\n"))
         .setting(AppSettings::AllowNegativeNumbers)
         .arg(
-            Arg::with_name("word")
+            Arg::with_name(KEY_WORD)
                 .takes_value(true)
                 .multiple(true)
                 .required(true)
                 .help("word is key=value"),
         )
         .arg(
-            Arg::with_name("array")
+            Arg::with_name(KEY_ARRAY)
                 .short("a")
-                .long("array")
+                .long(KEY_ARRAY)
                 .help("creates an array of words"),
         )
         .arg(
@@ -134,15 +137,15 @@ fn run() -> Result<bool> {
         )
         .get_matches();
 
-    let args: Vec<&str> = matches.values_of("word").unwrap().collect();
+    let args: Vec<&str> = matches.values_of(KEY_WORD).unwrap().collect();
 
-    let data = match matches.is_present("array") {
+    let data = match matches.is_present(KEY_ARRAY) {
         true => do_array(&args).unwrap(),
         false => do_object(&args).unwrap(),
     };
 
     let result = match matches.is_present("pretty-print") {
-        true => json::stringify_pretty(data, 4u16),
+        true => json::stringify_pretty(data, 4),
         false => json::stringify(data),
     };
 
