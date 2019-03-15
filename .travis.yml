@@ -13,7 +13,7 @@ before_script:
   - rustup component add clippy
 script:
   - cargo build --verbose
-  - cargo test --verboseb
+  - cargo test --verbose
 jobs:
   include:
     - stage: style checks
