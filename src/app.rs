@@ -6,6 +6,7 @@ pub static PRETTY: &'static str = "pretty-print";
 pub static DISABLE_BOOLEAN: &'static str = "disable boolean";
 
 pub struct AppSettings {
+    pub args: Vec<String>, // todo: use &str instead of String, if possible
     pub is_array: bool,
     pub is_pretty: bool,
     pub disable_boolean: bool,
@@ -14,6 +15,11 @@ pub struct AppSettings {
 impl AppSettings {
     pub fn new(matches: &ArgMatches) -> AppSettings {
         AppSettings {
+            args: matches
+                .values_of(WORD)
+                .unwrap()
+                .map(|x| x.to_string())
+                .collect(),
             is_array: matches.is_present(ARRAY),
             is_pretty: matches.is_present(PRETTY),
             disable_boolean: matches.is_present(DISABLE_BOOLEAN),

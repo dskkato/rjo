@@ -9,7 +9,7 @@ extern crate json;
 use json::{JsonValue, Result};
 
 mod app;
-use app::{get_app, ARRAY, WORD};
+use app::{get_app, ARRAY};
 
 #[cfg(test)]
 mod tests;
@@ -34,7 +34,7 @@ fn parse_value(s: &str, disalbe_boolean: bool) -> JsonValue {
     }
 }
 
-fn do_object(args: clap::Values, disalbe_boolean: bool) -> Result<JsonValue> {
+fn do_object(args: &[String], disalbe_boolean: bool) -> Result<JsonValue> {
     let mut data = object! {};
 
     for el in args {
@@ -53,7 +53,7 @@ fn do_object(args: clap::Values, disalbe_boolean: bool) -> Result<JsonValue> {
     Ok(data)
 }
 
-fn do_array(args: clap::Values, disalbe_boolean: bool) -> Result<JsonValue> {
+fn do_array(args: &[String], disalbe_boolean: bool) -> Result<JsonValue> {
     let mut data = array! {};
     for value in args {
         data.push(parse_value(value, disalbe_boolean))?;
@@ -62,12 +62,11 @@ fn do_array(args: clap::Values, disalbe_boolean: bool) -> Result<JsonValue> {
 }
 
 fn run(matches: clap::ArgMatches, app_settings: app::AppSettings) -> Result<bool> {
-    let args = matches.values_of(WORD).unwrap();
-
+    let args = app_settings.args;
     let data = if matches.is_present(ARRAY) {
-        do_array(args, app_settings.disable_boolean).unwrap()
+        do_array(&args, app_settings.disable_boolean).unwrap()
     } else {
-        do_object(args, app_settings.disable_boolean).unwrap()
+        do_object(&args, app_settings.disable_boolean).unwrap()
     };
 
     let result = if app_settings.is_pretty {
