@@ -21,17 +21,17 @@ pub fn get_app() -> App<'static, 'static> {
             Arg::with_name(ARRAY)
                 .short("a")
                 .long(ARRAY)
-                .help("creates an array of words"),
+                .help("Creates an array of words"),
         )
         .arg(
             Arg::with_name(PRETTY)
                 .short("p")
                 .long("pretty")
-                .help("pretty-prints JSON on output"),
+                .help("Pretty-prints JSON on output"),
         )
         .arg(
             Arg::with_name(DISABLE_BOOLEAN)
                 .short("B")
-                .help("disable boolean true/false"),
+                .help("Disable boolean true/false"),
         )
 }
