@@ -9,19 +9,32 @@ extern crate json;
 use json::{JsonValue, Result};
 
 mod app;
-use app::{get_app, ARRAY, WORD};
+use app::{get_app, ARRAY, DISABLE_BOOLEAN, PRETTY, WORD};
 
 #[cfg(test)]
 mod tests;
 
-fn parse_value(s: &str) -> JsonValue {
-    match json::parse(s) {
-        Ok(v) => v,
-        Err(_) => s.into(),
+fn parse_value(s: &str, disalbe_boolean: bool) -> JsonValue {
+    if disalbe_boolean {
+        match json::parse(s) {
+            Ok(v) => {
+                if v.is_boolean() {
+                    s.into()
+                } else {
+                    v
+                }
+            }
+            Err(_) => s.into(),
+        }
+    } else {
+        match json::parse(s) {
+            Ok(v) => v,
+            Err(_) => s.into(),
+        }
     }
 }
 
-fn do_object(args: clap::Values) -> Result<JsonValue> {
+fn do_object(args: clap::Values, disalbe_boolean: bool) -> Result<JsonValue> {
     let mut data = object! {};
 
     for el in args {
@@ -35,29 +48,30 @@ fn do_object(args: clap::Values) -> Result<JsonValue> {
         }
 
         let (key, value) = (kv[0], kv[1]);
-        data[key] = parse_value(value);
+        data[key] = parse_value(value, disalbe_boolean);
     }
     Ok(data)
 }
 
-fn do_array(args: clap::Values) -> Result<JsonValue> {
+fn do_array(args: clap::Values, disalbe_boolean: bool) -> Result<JsonValue> {
     let mut data = array! {};
     for value in args {
-        data.push(parse_value(value))?;
+        data.push(parse_value(value, disalbe_boolean))?;
     }
     Ok(data)
 }
 
 fn run(matches: clap::ArgMatches) -> Result<bool> {
     let args = matches.values_of(WORD).unwrap();
+    let disalbe_boolean = matches.is_present(DISABLE_BOOLEAN);
 
     let data = if matches.is_present(ARRAY) {
-        do_array(args).unwrap()
+        do_array(args, disalbe_boolean).unwrap()
     } else {
-        do_object(args).unwrap()
+        do_object(args, disalbe_boolean).unwrap()
     };
 
-    let result = if matches.is_present("pretty-print") {
+    let result = if matches.is_present(PRETTY) {
         json::stringify_pretty(data, 4)
     } else {
         json::stringify(data)
