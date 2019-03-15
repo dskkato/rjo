@@ -2,10 +2,11 @@ language: rust
 rust:
   - stable
   - beta
-  - nightly
+os:
+  - linux
+  - osx
+cache: cargo
 matrix:
-  allow_failures:
-    - rust: nightly
   fast_finish: true
 before_script:
   - rustup component add rustfmt
@@ -13,5 +14,5 @@ before_script:
 script:
   - cargo fmt -- --check
   - cargo clippy -- -D warnings
-  - cargo test
-  - cargo build --release
+  - cargo build --verbose
+  - cargo test --verbose
