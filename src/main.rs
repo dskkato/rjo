@@ -9,7 +9,7 @@ extern crate json;
 use json::{JsonValue, Result};
 
 mod app;
-use app::{get_app, ARRAY};
+use app::get_app;
 
 #[cfg(test)]
 mod tests;
@@ -61,9 +61,9 @@ fn do_array(args: &[String], disalbe_boolean: bool) -> Result<JsonValue> {
     Ok(data)
 }
 
-fn run(matches: clap::ArgMatches, app_settings: app::AppSettings) -> Result<bool> {
+fn run(app_settings: app::AppSettings) -> Result<bool> {
     let args = app_settings.args;
-    let data = if matches.is_present(ARRAY) {
+    let data = app_settings.is_array {
         do_array(&args, app_settings.disable_boolean).unwrap()
     } else {
         do_object(&args, app_settings.disable_boolean).unwrap()
@@ -84,8 +84,8 @@ fn run(matches: clap::ArgMatches, app_settings: app::AppSettings) -> Result<bool
 
 fn main() {
     let matches = get_app().get_matches();
-    let app_settings = app::AppSettings::new(&matches);
-    let result = run(matches, app_settings);
+    let app_settings = app::AppSettings::new(matches);
+    let result = run(app_settings);
 
     match result {
         Ok(true) => process::exit(0),
