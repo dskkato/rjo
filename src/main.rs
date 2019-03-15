@@ -9,7 +9,7 @@ extern crate json;
 use json::{JsonValue, Result};
 
 mod app;
-use app::{get_app, ARRAY, DISABLE_BOOLEAN, PRETTY, WORD};
+use app::{get_app, AppSettings};
 
 #[cfg(test)]
 mod tests;
@@ -34,7 +34,7 @@ fn parse_value(s: &str, disalbe_boolean: bool) -> JsonValue {
     }
 }
 
-fn do_object(args: clap::Values, disalbe_boolean: bool) -> Result<JsonValue> {
+fn do_object(args: &[String], disalbe_boolean: bool) -> Result<JsonValue> {
     let mut data = object! {};
 
     for el in args {
@@ -53,7 +53,7 @@ fn do_object(args: clap::Values, disalbe_boolean: bool) -> Result<JsonValue> {
     Ok(data)
 }
 
-fn do_array(args: clap::Values, disalbe_boolean: bool) -> Result<JsonValue> {
+fn do_array(args: &[String], disalbe_boolean: bool) -> Result<JsonValue> {
     let mut data = array! {};
     for value in args {
         data.push(parse_value(value, disalbe_boolean))?;
@@ -61,17 +61,15 @@ fn do_array(args: clap::Values, disalbe_boolean: bool) -> Result<JsonValue> {
     Ok(data)
 }
 
-fn run(matches: clap::ArgMatches) -> Result<bool> {
-    let args = matches.values_of(WORD).unwrap();
-    let disalbe_boolean = matches.is_present(DISABLE_BOOLEAN);
-
-    let data = if matches.is_present(ARRAY) {
-        do_array(args, disalbe_boolean).unwrap()
+fn run(app_settings: AppSettings) -> Result<bool> {
+    let args = app_settings.args;
+    let data = if app_settings.is_array {
+        do_array(&args, app_settings.disable_boolean).unwrap()
     } else {
-        do_object(args, disalbe_boolean).unwrap()
+        do_object(&args, app_settings.disable_boolean).unwrap()
     };
 
-    let result = if matches.is_present(PRETTY) {
+    let result = if app_settings.is_pretty {
         json::stringify_pretty(data, 4)
     } else {
         json::stringify(data)
@@ -86,7 +84,8 @@ fn run(matches: clap::ArgMatches) -> Result<bool> {
 
 fn main() {
     let matches = get_app().get_matches();
-    let result = run(matches);
+    let app_settings = AppSettings::new(matches);
+    let result = run(app_settings);
 
     match result {
         Ok(true) => process::exit(0),
