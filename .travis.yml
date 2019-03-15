@@ -3,6 +3,7 @@ rust:
   - stable
   - beta
   - nightly
+cache: cargo
 matrix:
   allow_failures:
     - rust: nightly
@@ -16,6 +17,6 @@ jobs:
       script: cargo fmt -- --check
       script: cargo clippy -- -D warnings
     - stage: unit tests
-      script: cargo test
-    - stage:
-      script: cargo build --release
+      script: cargo test --verbose --all
+    - stage: build
+      script: cargo build --verbose --all
