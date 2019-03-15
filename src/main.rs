@@ -63,7 +63,7 @@ fn do_array(args: &[String], disalbe_boolean: bool) -> Result<JsonValue> {
 
 fn run(app_settings: app::AppSettings) -> Result<bool> {
     let args = app_settings.args;
-    let data = app_settings.is_array {
+    let data = if app_settings.is_array {
         do_array(&args, app_settings.disable_boolean).unwrap()
     } else {
         do_object(&args, app_settings.disable_boolean).unwrap()
