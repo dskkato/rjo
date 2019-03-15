@@ -2,17 +2,21 @@ language: rust
 rust:
   - stable
   - beta
-  - nightly
+os:
+  - linux
+  - osx
 cache: cargo
 matrix:
-  allow_failures:
-    - rust: nightly
   fast_finish: true
 before_script:
   - rustup component add rustfmt
   - rustup component add clippy
+script:
+  - cargo build --verbose
+  - cargo test --verboseb
 jobs:
   include:
     - stage: style checks
       script: cargo fmt -- --check
+    - stage: clippy checks
       script: cargo clippy -- -D warnings
