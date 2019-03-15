@@ -18,7 +18,7 @@ impl AppSettings {
             args: matches
                 .values_of(WORD)
                 .unwrap()
-                .map(|x| x.to_string())
+                .map(String::from)
                 .collect(),
             is_array: matches.is_present(ARRAY),
             is_pretty: matches.is_present(PRETTY),
