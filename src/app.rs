@@ -2,6 +2,8 @@ use clap::{App, AppSettings, Arg};
 
 pub static WORD: &'static str = "word";
 pub static ARRAY: &'static str = "array";
+pub static PRETTY: &'static str = "pretty-print";
+pub static DISABLE_BOOLEAN: &'static str = "disable boolean";
 
 pub fn get_app() -> App<'static, 'static> {
     App::new(crate_name!())
@@ -22,14 +24,14 @@ pub fn get_app() -> App<'static, 'static> {
                 .help("creates an array of words"),
         )
         .arg(
-            Arg::with_name("pretty-print")
+            Arg::with_name(PRETTY)
                 .short("p")
                 .long("pretty")
                 .help("pretty-prints JSON on output"),
         )
         .arg(
-            Arg::with_name("disable boolean")
-                .short("-B")
+            Arg::with_name(DISABLE_BOOLEAN)
+                .short("B")
                 .help("disable boolean true/false"),
         )
 }
