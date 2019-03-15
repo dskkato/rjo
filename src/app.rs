@@ -27,4 +27,9 @@ pub fn get_app() -> App<'static, 'static> {
                 .long("pretty")
                 .help("pretty-prints JSON on output"),
         )
+        .arg(
+            Arg::with_name("disable boolean")
+                .short("-B")
+                .help("disable boolean true/false"),
+        )
 }

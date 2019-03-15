@@ -34,7 +34,7 @@ fn test_do_object() {
     let args = vec![crate_name!(), "a=b", "b=true", "c=1", "d=-1"];
     let matches = get_app().get_matches_from(args);
 
-    let result = do_object(matches.values_of(WORD).unwrap());
+    let result = do_object(matches.values_of(WORD).unwrap(), false);
     let expected = object! {
         "a" => "b",
         "b" => true,
@@ -49,7 +49,7 @@ fn test_do_array() {
     let args = vec![crate_name!(), "-a", "b", "true", "1", "-1"];
     let matches = get_app().get_matches_from(args);
 
-    let result = do_array(matches.values_of(WORD).unwrap());
+    let result = do_array(matches.values_of(WORD).unwrap(), false);
     let expected = array!["b", true, 1, -1];
     assert_eq!(expected, result.unwrap());
 }
@@ -68,6 +68,16 @@ fn test_object() {
     let matches = get_app().get_matches_from(args);
 
     assert_eq!(Ok(true), run(matches));
+}
+
+#[test]
+fn test_disable_boolean() {
+    let args = vec![crate_name!(), "-a", "-B", "b", "true", "1", "-1"];
+    let matches = get_app().get_matches_from(args);
+
+    let result = do_array(matches.values_of(WORD).unwrap(), false);
+    let expected = array!["b", "true", 1, -1];
+    assert_eq!(expected, result.unwrap());
 }
 
 #[test]

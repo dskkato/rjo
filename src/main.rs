@@ -21,7 +21,7 @@ fn parse_value(s: &str) -> JsonValue {
     }
 }
 
-fn do_object(args: clap::Values) -> Result<JsonValue> {
+fn do_object(args: clap::Values, disalbe_boolean: bool) -> Result<JsonValue> {
     let mut data = object! {};
 
     for el in args {
@@ -40,7 +40,7 @@ fn do_object(args: clap::Values) -> Result<JsonValue> {
     Ok(data)
 }
 
-fn do_array(args: clap::Values) -> Result<JsonValue> {
+fn do_array(args: clap::Values, disalbe_boolean: bool) -> Result<JsonValue> {
     let mut data = array! {};
     for value in args {
         data.push(parse_value(value))?;
@@ -52,9 +52,9 @@ fn run(matches: clap::ArgMatches) -> Result<bool> {
     let args = matches.values_of(WORD).unwrap();
 
     let data = if matches.is_present(ARRAY) {
-        do_array(args).unwrap()
+        do_array(args, false).unwrap()
     } else {
-        do_object(args).unwrap()
+        do_object(args, false).unwrap()
     };
 
     let result = if matches.is_present("pretty-print") {
