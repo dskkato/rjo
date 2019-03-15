@@ -9,7 +9,7 @@ extern crate json;
 use json::{JsonValue, Result};
 
 mod app;
-use app::{get_app, ARRAY, DISABLE_BOOLEAN, PRETTY, WORD};
+use app::{get_app, ARRAY, WORD};
 
 #[cfg(test)]
 mod tests;
@@ -61,17 +61,16 @@ fn do_array(args: clap::Values, disalbe_boolean: bool) -> Result<JsonValue> {
     Ok(data)
 }
 
-fn run(matches: clap::ArgMatches, appSettings: app::AppSettings) -> Result<bool> {
+fn run(matches: clap::ArgMatches, app_settings: app::AppSettings) -> Result<bool> {
     let args = matches.values_of(WORD).unwrap();
-    let disalbe_boolean = matches.is_present(DISABLE_BOOLEAN);
 
     let data = if matches.is_present(ARRAY) {
-        do_array(args, disalbe_boolean).unwrap()
+        do_array(args, app_settings.disable_boolean).unwrap()
     } else {
-        do_object(args, disalbe_boolean).unwrap()
+        do_object(args, app_settings.disable_boolean).unwrap()
     };
 
-    let result = if matches.is_present(PRETTY) {
+    let result = if app_settings.is_pretty {
         json::stringify_pretty(data, 4)
     } else {
         json::stringify(data)
@@ -86,8 +85,8 @@ fn run(matches: clap::ArgMatches, appSettings: app::AppSettings) -> Result<bool>
 
 fn main() {
     let matches = get_app().get_matches();
-    let appSettings = app::AppSettings::new(&matches);
-    let result = run(matches, appSettings);
+    let app_settings = app::AppSettings::new(&matches);
+    let result = run(matches, app_settings);
 
     match result {
         Ok(true) => process::exit(0),

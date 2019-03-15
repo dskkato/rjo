@@ -14,9 +14,9 @@ pub struct AppSettings {
 impl AppSettings {
     pub fn new(matches: &ArgMatches) -> AppSettings {
         AppSettings {
-            is_array: true,
-            is_pretty: true,
-            disable_boolean: true,
+            is_array: matches.is_present(ARRAY),
+            is_pretty: matches.is_present(PRETTY),
+            disable_boolean: matches.is_present(DISABLE_BOOLEAN),
         }
     }
 }
