@@ -13,7 +13,7 @@ pub struct AppSettings {
 }
 
 impl AppSettings {
-    pub fn new(matches: &ArgMatches) -> AppSettings {
+    pub fn new(matches: ArgMatches) -> AppSettings {
         AppSettings {
             args: matches.values_of(WORD).unwrap().map(String::from).collect(),
             is_array: matches.is_present(ARRAY),
