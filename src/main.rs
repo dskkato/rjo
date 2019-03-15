@@ -61,7 +61,7 @@ fn do_array(args: clap::Values, disalbe_boolean: bool) -> Result<JsonValue> {
     Ok(data)
 }
 
-fn run(matches: clap::ArgMatches) -> Result<bool> {
+fn run(matches: clap::ArgMatches, appSettings: app::AppSettings) -> Result<bool> {
     let args = matches.values_of(WORD).unwrap();
     let disalbe_boolean = matches.is_present(DISABLE_BOOLEAN);
 
@@ -86,7 +86,8 @@ fn run(matches: clap::ArgMatches) -> Result<bool> {
 
 fn main() {
     let matches = get_app().get_matches();
-    let result = run(matches);
+    let appSettings = app::AppSettings::new(&matches);
+    let result = run(matches, appSettings);
 
     match result {
         Ok(true) => process::exit(0),
