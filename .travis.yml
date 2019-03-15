@@ -11,12 +11,13 @@ matrix:
 before_script:
   - rustup component add rustfmt
   - rustup component add clippy
-jobs:
-  include:
-    - stage: style checks
-      script: cargo fmt -- --check
-      script: cargo clippy -- -D warnings
-    - stage: unit tests
-      script: cargo test --verbose --all
-    - stage: build
-      script: cargo build --verbose --all
+script:
+  jobs:
+    include:
+      - stage: style checks
+        script: cargo fmt -- --check
+        script: cargo clippy -- -D warnings
+      - stage: unit tests
+        script: cargo test --verbose
+      - stage: build
+        script: cargo build --verbose
