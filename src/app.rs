@@ -1,9 +1,9 @@
 use clap::{App, AppSettings as ClapAppSettings, Arg, ArgMatches};
 
-pub static WORD: &'static str = "word";
-pub static ARRAY: &'static str = "array";
-pub static PRETTY: &'static str = "pretty-print";
-pub static DISABLE_BOOLEAN: &'static str = "disable boolean";
+const WORD: &str = "word";
+const ARRAY: &str = "array";
+const PRETTY: &str = "pretty-print";
+const DISABLE_BOOLEAN: &str = "disable boolean";
 
 pub struct AppSettings {
     pub args: Vec<String>, // todo: use &str instead of String, if possible
