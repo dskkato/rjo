@@ -33,7 +33,7 @@ fn test_parse_number() {
 fn test_do_object() {
     let args = vec!["a=b", "b=true", "c=1", "d=-1"];
 
-    let args: Vec<String> = args.into_iter().map(|x| x.to_string()).collect();
+    let args: Vec<String> = args.into_iter().map(String::from).collect();
     let result = do_object(&args, false);
     let expected = object! {
         "a" => "b",
@@ -48,7 +48,7 @@ fn test_do_object() {
 fn test_do_array() {
     let args = vec!["b", "true", "1", "-1"];
 
-    let args: Vec<String> = args.into_iter().map(|x| x.to_string()).collect();
+    let args: Vec<String> = args.into_iter().map(String::from).collect();
     let result = do_array(&args, false);
     let expected = array!["b", true, 1, -1];
     assert_eq!(expected, result.unwrap());
@@ -58,18 +58,18 @@ fn test_do_array() {
 fn test_array() {
     let args = vec![crate_name!(), "-a", "b", "true", "1", "-1"];
     let matches = get_app().get_matches_from(args);
-    let app_settings = app::AppSettings::new(&matches);
+    let app_settings = app::AppSettings::new(matches);
 
-    assert_eq!(Ok(true), run(matches, app_settings));
+    assert_eq!(Ok(true), run(app_settings));
 }
 
 #[test]
 fn test_object() {
     let args = vec![crate_name!(), "a=b", "b=true", "c=1", "d=-1"];
     let matches = get_app().get_matches_from(args);
-    let app_settings = app::AppSettings::new(&matches);
+    let app_settings = app::AppSettings::new(matches);
 
-    assert_eq!(Ok(true), run(matches, app_settings));
+    assert_eq!(Ok(true), run(app_settings));
 }
 
 #[test]
@@ -77,7 +77,7 @@ fn test_disable_boolean() {
     let args = vec!["b", "true", "1", "-1"];
     let disable_boolean = true;
 
-    let args: Vec<String> = args.into_iter().map(|x| x.to_string()).collect();
+    let args: Vec<String> = args.into_iter().map(String::from).collect();
     let result = do_array(&args, disable_boolean);
     let expected = array!["b", "true", 1, -1];
     assert_eq!(expected, result.unwrap());
@@ -87,9 +87,9 @@ fn test_disable_boolean() {
 fn test_disable_boolean_run() {
     let args = vec![crate_name!(), "-a", "-B", "b", "true", "1", "-1"];
     let matches = get_app().get_matches_from(args);
-    let app_settings = app::AppSettings::new(&matches);
+    let app_settings = app::AppSettings::new(matches);
 
-    run(matches, app_settings).unwrap();
+    run(app_settings).unwrap();
 }
 
 #[test]
@@ -97,9 +97,9 @@ fn test_disable_boolean_run() {
 fn test_panic1() {
     let args = vec![crate_name!(), "a"];
     let matches = get_app().get_matches_from(args);
-    let app_settings = app::AppSettings::new(&matches);
+    let app_settings = app::AppSettings::new(matches);
 
-    run(matches, app_settings).unwrap();
+    run(app_settings).unwrap();
 }
 
 #[test]
@@ -107,7 +107,7 @@ fn test_panic1() {
 fn test_panic() {
     let args = vec![crate_name!(), "=a"];
     let matches = get_app().get_matches_from(args);
-    let app_settings = app::AppSettings::new(&matches);
+    let app_settings = app::AppSettings::new(matches);
 
-    run(matches, app_settings).unwrap();
+    run(app_settings).unwrap();
 }
