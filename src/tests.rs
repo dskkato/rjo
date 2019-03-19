@@ -33,7 +33,7 @@ fn test_parse_number() {
 fn test_do_object() {
     let args = vec!["a=b", "b=true", "c=1", "d=-1"];
 
-    let args: Vec<String> = args.into_iter().map(String::from).collect();
+    let args: Vec<String> = args.into_iter().map(&str::to_string).collect();
     let result = do_object(&args, false);
     let expected = object! {
         "a" => "b",
@@ -48,7 +48,7 @@ fn test_do_object() {
 fn test_do_array() {
     let args = vec!["b", "true", "1", "-1"];
 
-    let args: Vec<String> = args.into_iter().map(String::from).collect();
+    let args: Vec<String> = args.into_iter().map(&str::to_string).collect();
     let result = do_array(&args, false);
     let expected = array!["b", true, 1, -1];
     assert_eq!(expected, result.unwrap());

@@ -14,17 +14,20 @@ use app::{get_app, AppSettings};
 #[cfg(test)]
 mod tests;
 
+const TRUE_STR: &str = "true";
+const FALSE_STR: &str = "false";
+
 fn parse_value(s: &str, disalbe_boolean: bool) -> JsonValue {
     if disalbe_boolean {
-        match json::parse(s) {
-            Ok(v) => {
-                if v.is_boolean() {
-                    s.into()
-                } else {
-                    v
-                }
+        if s == TRUE_STR {
+            TRUE_STR.into()
+        } else if s == FALSE_STR {
+            FALSE_STR.into()
+        } else {
+            match json::parse(s) {
+                Ok(v) => v,
+                Err(_) => s.into(),
             }
-            Err(_) => s.into(),
         }
     } else {
         match json::parse(s) {

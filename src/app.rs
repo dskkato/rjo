@@ -15,7 +15,11 @@ pub struct AppSettings {
 impl AppSettings {
     pub fn new(matches: ArgMatches) -> AppSettings {
         AppSettings {
-            args: matches.values_of(WORD).unwrap().map(String::from).collect(),
+            args: matches
+                .values_of(WORD)
+                .unwrap()
+                .map(&str::to_string)
+                .collect(),
             is_array: matches.is_present(ARRAY),
             is_pretty: matches.is_present(PRETTY),
             disable_boolean: matches.is_present(DISABLE_BOOLEAN),
