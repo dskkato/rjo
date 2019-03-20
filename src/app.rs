@@ -5,21 +5,17 @@ const ARRAY: &str = "array";
 const PRETTY: &str = "pretty-print";
 const DISABLE_BOOLEAN: &str = "disable boolean";
 
-pub struct AppSettings {
-    pub args: Vec<String>, // todo: use &str instead of String, if possible
+pub struct AppSettings<'a> {
+    pub args: Vec<&'a str>,
     pub is_array: bool,
     pub is_pretty: bool,
     pub disable_boolean: bool,
 }
 
-impl AppSettings {
-    pub fn new(matches: ArgMatches) -> AppSettings {
+impl<'a> AppSettings<'a> {
+    pub fn new(matches: &'a ArgMatches) -> AppSettings<'a> {
         AppSettings {
-            args: matches
-                .values_of(WORD)
-                .unwrap()
-                .map(&str::to_string)
-                .collect(),
+            args: matches.values_of(WORD).unwrap().collect(),
             is_array: matches.is_present(ARRAY),
             is_pretty: matches.is_present(PRETTY),
             disable_boolean: matches.is_present(DISABLE_BOOLEAN),

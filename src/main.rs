@@ -37,7 +37,7 @@ fn parse_value(s: &str, disalbe_boolean: bool) -> JsonValue {
     }
 }
 
-fn do_object(args: &[String], disalbe_boolean: bool) -> Result<JsonValue> {
+fn do_object(args: &[&str], disalbe_boolean: bool) -> Result<JsonValue> {
     let mut data = object! {};
 
     for el in args {
@@ -56,7 +56,7 @@ fn do_object(args: &[String], disalbe_boolean: bool) -> Result<JsonValue> {
     Ok(data)
 }
 
-fn do_array(args: &[String], disalbe_boolean: bool) -> Result<JsonValue> {
+fn do_array(args: &[&str], disalbe_boolean: bool) -> Result<JsonValue> {
     let mut data = array! {};
     for value in args {
         data.push(parse_value(value, disalbe_boolean))?;
@@ -87,7 +87,7 @@ fn run(app_settings: AppSettings) -> Result<bool> {
 
 fn main() {
     let matches = get_app().get_matches();
-    let app_settings = AppSettings::new(matches);
+    let app_settings = AppSettings::new(&matches);
     let result = run(app_settings);
 
     match result {
