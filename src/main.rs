@@ -65,11 +65,11 @@ fn do_array(args: &[&str], disalbe_boolean: bool) -> Result<JsonValue> {
 }
 
 fn run(app_settings: AppSettings) -> Result<bool> {
-    let args = app_settings.args;
+    let args = &app_settings.args;
     let data = if app_settings.is_array {
-        do_array(&args, app_settings.disable_boolean).unwrap()
+        do_array(args, app_settings.disable_boolean).unwrap()
     } else {
-        do_object(&args, app_settings.disable_boolean).unwrap()
+        do_object(args, app_settings.disable_boolean).unwrap()
     };
 
     let result = if app_settings.is_pretty {
@@ -86,9 +86,11 @@ fn run(app_settings: AppSettings) -> Result<bool> {
 }
 
 fn main() {
-    let matches = get_app().get_matches();
-    let app_settings = AppSettings::new(&matches);
-    let result = run(app_settings);
+    let result = {
+        let matches = get_app().get_matches();
+        let app_settings = AppSettings::new(&matches);
+        run(app_settings)
+    };
 
     match result {
         Ok(true) => process::exit(0),
