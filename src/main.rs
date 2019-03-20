@@ -9,7 +9,7 @@ extern crate json;
 use json::{JsonValue, Result};
 
 mod app;
-use app::{configure, get_app, Configuration};
+use app::{configure, get_app, Config};
 
 #[cfg(test)]
 mod tests;
@@ -64,15 +64,15 @@ fn do_array(args: &[&str], disalbe_boolean: bool) -> Result<JsonValue> {
     Ok(data)
 }
 
-fn run(configuration: Configuration) -> Result<bool> {
-    let args = &configuration.args;
-    let data = if configuration.is_array {
-        do_array(args, configuration.disable_boolean).unwrap()
+fn run(config: Config) -> Result<bool> {
+    let args = &config.args;
+    let data = if config.is_array {
+        do_array(args, config.disable_boolean).unwrap()
     } else {
-        do_object(args, configuration.disable_boolean).unwrap()
+        do_object(args, config.disable_boolean).unwrap()
     };
 
-    let result = if configuration.is_pretty {
+    let result = if config.is_pretty {
         json::stringify_pretty(data, 4)
     } else {
         json::stringify(data)
@@ -88,8 +88,8 @@ fn run(configuration: Configuration) -> Result<bool> {
 fn main() {
     let result = {
         let matches = get_app().get_matches();
-        let configuration = configure(&matches);
-        run(configuration)
+        let config = configure(&matches);
+        run(config)
     };
 
     match result {

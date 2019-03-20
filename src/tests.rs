@@ -56,18 +56,18 @@ fn test_do_array() {
 fn test_array() {
     let args = vec![crate_name!(), "-a", "b", "true", "1", "-1"];
     let matches = get_app().get_matches_from(args);
-    let configuration = configure(&matches);
+    let config = configure(&matches);
 
-    assert_eq!(Ok(true), run(configuration));
+    assert_eq!(Ok(true), run(config));
 }
 
 #[test]
 fn test_object() {
     let args = vec![crate_name!(), "a=b", "b=true", "c=1", "d=-1"];
     let matches = get_app().get_matches_from(args);
-    let configuration = configure(&matches);
+    let config = configure(&matches);
 
-    assert_eq!(Ok(true), run(configuration));
+    assert_eq!(Ok(true), run(config));
 }
 
 #[test]
@@ -84,9 +84,9 @@ fn test_disable_boolean() {
 fn test_disable_boolean_run() {
     let args = vec![crate_name!(), "-a", "-B", "b", "true", "1", "-1"];
     let matches = get_app().get_matches_from(args);
-    let configuration = configure(&matches);
+    let config = configure(&matches);
 
-    run(configuration).unwrap();
+    run(config).unwrap();
 }
 
 #[test]
@@ -94,9 +94,9 @@ fn test_disable_boolean_run() {
 fn test_panic1() {
     let args = vec![crate_name!(), "a"];
     let matches = get_app().get_matches_from(args);
-    let configuration = configure(&matches);
+    let config = configure(&matches);
 
-    run(configuration).unwrap();
+    run(config).unwrap();
 }
 
 #[test]
@@ -104,7 +104,7 @@ fn test_panic1() {
 fn test_panic() {
     let args = vec![crate_name!(), "=a"];
     let matches = get_app().get_matches_from(args);
-    let configuration = configure(&matches);
+    let config = configure(&matches);
 
-    run(configuration).unwrap();
+    run(config).unwrap();
 }
