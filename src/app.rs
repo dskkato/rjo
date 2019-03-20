@@ -1,25 +1,23 @@
-use clap::{App, AppSettings as ClapAppSettings, Arg, ArgMatches};
+use clap::{App, AppSettings, Arg, ArgMatches};
 
 const WORD: &str = "word";
 const ARRAY: &str = "array";
 const PRETTY: &str = "pretty-print";
 const DISABLE_BOOLEAN: &str = "disable boolean";
 
-pub struct AppSettings<'a> {
+pub struct Configuration<'a> {
     pub args: Vec<&'a str>,
     pub is_array: bool,
     pub is_pretty: bool,
     pub disable_boolean: bool,
 }
 
-impl<'a> AppSettings<'a> {
-    pub fn new(matches: &'a ArgMatches) -> AppSettings<'a> {
-        AppSettings {
-            args: matches.values_of(WORD).unwrap().collect(),
-            is_array: matches.is_present(ARRAY),
-            is_pretty: matches.is_present(PRETTY),
-            disable_boolean: matches.is_present(DISABLE_BOOLEAN),
-        }
+pub fn configure<'a>(matches: &'a ArgMatches) -> Configuration<'a> {
+    Configuration {
+        args: matches.values_of(WORD).unwrap().collect(),
+        is_array: matches.is_present(ARRAY),
+        is_pretty: matches.is_present(PRETTY),
+        disable_boolean: matches.is_present(DISABLE_BOOLEAN),
     }
 }
 
@@ -27,7 +25,7 @@ pub fn get_app() -> App<'static, 'static> {
     App::new(crate_name!())
         .version(crate_version!())
         .author(crate_authors!("\n"))
-        .setting(ClapAppSettings::AllowNegativeNumbers)
+        .setting(AppSettings::AllowNegativeNumbers)
         .arg(
             Arg::with_name(WORD)
                 .takes_value(true)
