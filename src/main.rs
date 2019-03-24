@@ -78,9 +78,11 @@ fn run(config: Config) -> Result<bool> {
         json::stringify(data)
     };
 
-    let stdout = io::stdout();
-    let mut handle = stdout.lock();
-    writeln!(handle, "{}", result).expect("Failed to write");
+    {
+        let stdout = io::stdout();
+        let mut handle = stdout.lock();
+        writeln!(handle, "{}", result).expect("Failed to write");
+    }
 
     Ok(true)
 }
