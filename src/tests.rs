@@ -2,7 +2,7 @@ use super::*;
 
 #[test]
 fn test_parse_object() {
-    let s = "{\"a\":{\"b\":\"c\"}}";
+    let s = r#"{"a":{"b":"c"}}"#;
     let o = object! {
         "a" => object! {
             "b" => "c"
