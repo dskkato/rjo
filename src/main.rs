@@ -67,9 +67,15 @@ fn do_array(args: &[&str], disalbe_boolean: bool) -> Result<JsonValue> {
 fn run(config: Config) -> Result<bool> {
     let args = &config.args;
     let data = if config.is_array {
-        do_array(args, config.disable_boolean).unwrap()
+        match do_array(args, config.disable_boolean) {
+            Ok(data) => data,
+            Err(_) => return Ok(false),
+        }
     } else {
-        do_object(args, config.disable_boolean).unwrap()
+        match do_object(args, config.disable_boolean) {
+            Ok(data) => data,
+            Err(_) => return Ok(false),
+        }
     };
 
     let result = if config.is_pretty {
