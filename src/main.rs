@@ -1,4 +1,3 @@
-use std::io::{self, Write};
 use std::process;
 
 #[macro_use]
@@ -43,11 +42,13 @@ fn do_object(args: &[&str], disalbe_boolean: bool) -> Result<JsonValue> {
     for el in args {
         let kv: Vec<&str> = el.splitn(2, '=').collect();
         if kv.len() != 2 {
-            panic!(format!("Argument {:?} is not k=v", el));
+            eprintln!("Warning: Argument \"{:}\" is not k=v. Skipped.", el);
+            continue;
         }
 
         if kv[0].is_empty() {
-            panic!(format!("An empty key is not allowed {:?}", el));
+            eprintln!("Warning: An empty key is not allowed \"{:}\". Skipped.", el);
+            continue;
         }
 
         let (key, value) = (kv[0], kv[1]);
@@ -84,11 +85,7 @@ fn run(config: Config) -> Result<bool> {
         json::stringify(data)
     };
 
-    {
-        let stdout = io::stdout();
-        let mut handle = stdout.lock();
-        writeln!(handle, "{}", result).expect("Failed to write");
-    }
+    println!("{}", result);
 
     Ok(true)
 }

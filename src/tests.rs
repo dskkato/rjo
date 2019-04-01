@@ -88,23 +88,3 @@ fn test_disable_boolean_run() {
 
     run(config).unwrap();
 }
-
-#[test]
-#[should_panic]
-fn test_panic1() {
-    let args = vec![crate_name!(), "a"];
-    let matches = get_app().get_matches_from(args);
-    let config = configure(&matches);
-
-    run(config).unwrap();
-}
-
-#[test]
-#[should_panic]
-fn test_panic() {
-    let args = vec![crate_name!(), "=a"];
-    let matches = get_app().get_matches_from(args);
-    let config = configure(&matches);
-
-    run(config).unwrap();
-}
