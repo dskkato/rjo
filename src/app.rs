@@ -13,7 +13,7 @@ pub struct Config {
 }
 
 pub fn configure(matches: &ArgMatches) -> Config {
-    let args = match matches.values_of(WORD){
+    let args = match matches.values_of(WORD) {
         Some(values) => values.map(String::from).collect(),
         None => vec![],
     };
