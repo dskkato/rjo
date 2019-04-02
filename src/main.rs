@@ -1,3 +1,4 @@
+use std::io::{self, Read};
 use std::process;
 
 #[macro_use]
@@ -36,7 +37,7 @@ fn parse_value(s: &str, disalbe_boolean: bool) -> JsonValue {
     }
 }
 
-fn do_object(args: &[&str], disalbe_boolean: bool) -> Result<JsonValue> {
+fn do_object(args: &[String], disalbe_boolean: bool) -> Result<JsonValue> {
     let mut data = object! {};
 
     for el in args {
@@ -57,7 +58,7 @@ fn do_object(args: &[&str], disalbe_boolean: bool) -> Result<JsonValue> {
     Ok(data)
 }
 
-fn do_array(args: &[&str], disalbe_boolean: bool) -> Result<JsonValue> {
+fn do_array(args: &[String], disalbe_boolean: bool) -> Result<JsonValue> {
     let mut data = array! {};
     for value in args {
         data.push(parse_value(value, disalbe_boolean))?;
@@ -66,14 +67,23 @@ fn do_array(args: &[&str], disalbe_boolean: bool) -> Result<JsonValue> {
 }
 
 fn run(config: Config) -> Result<bool> {
-    let args = &config.args;
+    let args = if !config.args.is_empty() {
+        config.args
+    } else {
+        let mut buf = String::new();
+        match io::stdin().read_to_string(&mut buf) {
+            Ok(_) => buf.lines().map(String::from).collect(),
+            Err(_) => return Ok(false),
+        }
+    };
+
     let data = if config.is_array {
-        match do_array(args, config.disable_boolean) {
+        match do_array(&args, config.disable_boolean) {
             Ok(data) => data,
             Err(_) => return Ok(false),
         }
     } else {
-        match do_object(args, config.disable_boolean) {
+        match do_object(&args, config.disable_boolean) {
             Ok(data) => data,
             Err(_) => return Ok(false),
         }

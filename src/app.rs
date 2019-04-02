@@ -5,16 +5,20 @@ const ARRAY: &str = "array";
 const PRETTY: &str = "pretty-print";
 const DISABLE_BOOLEAN: &str = "disable boolean";
 
-pub struct Config<'a> {
-    pub args: Vec<&'a str>,
+pub struct Config {
+    pub args: Vec<String>,
     pub is_array: bool,
     pub is_pretty: bool,
     pub disable_boolean: bool,
 }
 
-pub fn configure<'a>(matches: &'a ArgMatches) -> Config<'a> {
+pub fn configure(matches: &ArgMatches) -> Config {
+    let args = match matches.values_of(WORD){
+        Some(values) => values.map(String::from).collect(),
+        None => vec![],
+    };
     Config {
-        args: matches.values_of(WORD).unwrap().collect(),
+        args,
         is_array: matches.is_present(ARRAY),
         is_pretty: matches.is_present(PRETTY),
         disable_boolean: matches.is_present(DISABLE_BOOLEAN),
@@ -30,7 +34,6 @@ pub fn get_app() -> App<'static, 'static> {
             Arg::with_name(WORD)
                 .takes_value(true)
                 .multiple(true)
-                .required(true)
                 .help("word is key=value"),
         )
         .arg(
