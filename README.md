@@ -37,8 +37,11 @@ $ rjo -p name=jo n=17 parser=false
 }
 ```
 
-Arrays:
+or, arrays:
 ```
+$ seq 1 10 | rjo -a
+[1,2,3,4,5,6,7,8,9,10]
+
 $ rjo -p -a Rust 0 false
 [
     "Rust",
