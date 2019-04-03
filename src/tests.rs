@@ -31,7 +31,12 @@ fn test_parse_number() {
 
 #[test]
 fn test_do_object() {
-    let args = ["a=b", "b=true", "c=1", "d=-1"];
+    let args = [
+        "a=b".to_string(),
+        "b=true".to_string(),
+        "c=1".to_string(),
+        "d=-1".to_string(),
+    ];
 
     let result = do_object(&args, false);
     let expected = object! {
@@ -45,7 +50,12 @@ fn test_do_object() {
 
 #[test]
 fn test_do_array() {
-    let args = ["b", "true", "1", "-1"];
+    let args = [
+        "b".to_string(),
+        "true".to_string(),
+        "1".to_string(),
+        "-1".to_string(),
+    ];
 
     let result = do_array(&args, false);
     let expected = array!["b", true, 1, -1];
@@ -72,7 +82,12 @@ fn test_object() {
 
 #[test]
 fn test_disable_boolean() {
-    let args = ["b", "true", "1", "-1"];
+    let args = [
+        "b".to_string(),
+        "true".to_string(),
+        "1".to_string(),
+        "-1".to_string(),
+    ];
     let disable_boolean = true;
 
     let result = do_array(&args, disable_boolean);
