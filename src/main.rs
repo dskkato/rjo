@@ -6,7 +6,7 @@ extern crate clap;
 
 #[macro_use]
 extern crate json;
-use json::{JsonValue, Result};
+use json::JsonValue;
 
 mod app;
 use app::{configure, get_app, Config};
@@ -37,7 +37,7 @@ fn parse_value(s: &str, disalbe_boolean: bool) -> JsonValue {
     }
 }
 
-fn do_object(args: &[String], disalbe_boolean: bool) -> Result<JsonValue> {
+fn do_object(args: &[String], disalbe_boolean: bool) -> json::Result<JsonValue> {
     let mut data = object! {};
 
     for el in args {
@@ -58,7 +58,7 @@ fn do_object(args: &[String], disalbe_boolean: bool) -> Result<JsonValue> {
     Ok(data)
 }
 
-fn do_array(args: &[String], disalbe_boolean: bool) -> Result<JsonValue> {
+fn do_array(args: &[String], disalbe_boolean: bool) -> json::Result<JsonValue> {
     let mut data = array! {};
     for value in args {
         data.push(parse_value(value, disalbe_boolean))?;
@@ -66,15 +66,13 @@ fn do_array(args: &[String], disalbe_boolean: bool) -> Result<JsonValue> {
     Ok(data)
 }
 
-fn run(config: Config) -> Result<bool> {
+fn run(config: Config) -> io::Result<bool> {
     let args = if !config.args.is_empty() {
         config.args
     } else {
         let mut buf = String::new();
-        match io::stdin().read_to_string(&mut buf) {
-            Ok(_) => buf.lines().map(String::from).collect(),
-            Err(_) => return Ok(false),
-        }
+        io::stdin().read_to_string(&mut buf)?;
+        buf.lines().map(String::from).collect()
     };
 
     let data = if config.is_array {
@@ -107,8 +105,7 @@ fn main() {
         run(config)
     };
 
-    match result {
-        Ok(true) => process::exit(0),
-        _ => process::exit(1),
+    if result.is_err() {
+        process::exit(1);
     }
 }
