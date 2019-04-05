@@ -1,4 +1,4 @@
-use std::io::{self, Read};
+use std::io;
 use std::process;
 
 #[macro_use]
@@ -70,9 +70,20 @@ fn run(config: Config) -> io::Result<bool> {
     let args = if !config.args.is_empty() {
         config.args
     } else {
-        let mut buf = String::new();
-        io::stdin().read_to_string(&mut buf)?;
-        buf.lines().map(String::from).collect()
+        // todo: simplify this section
+        let mut v = vec![];
+        loop {
+            let mut buf = String::new();
+            match io::stdin().read_line(&mut buf) {
+                Ok(0) => break,
+                Ok(_) => {
+                    let _buf = &buf[..buf.len() - 1];
+                    v.push(_buf.into());
+                }
+                Err(e) => return Err(e),
+            };
+        }
+        v
     };
 
     let data = if config.is_array {
