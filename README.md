@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/dskkato/rjo.svg?branch=master)](https://travis-ci.org/dskkato/rjo)
 [![Build status](https://ci.appveyor.com/api/projects/status/9cu385votebtm92e/branch/master?svg=true)](https://ci.appveyor.com/project/dskkato/rjo)
 [![codecov](https://codecov.io/gh/dskkato/rjo/branch/master/graph/badge.svg)](https://codecov.io/gh/dskkato/rjo)
+
 A small utility to create JSON objects.
 
 The origin of this package is [jpmens/jo](https://github.com/jpmens/jo), and was inspired by a Golang ported version , [skanehira/gjo](https://github.com/skanehira/gjo).
