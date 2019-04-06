@@ -70,14 +70,8 @@ fn run(config: Config) -> io::Result<bool> {
     let args = if !config.args.is_empty() {
         config.args
     } else {
-        // todo: simplify this section
-        let mut v = vec![];
         let stdin = io::stdin();
-        for line_result in stdin.lock().lines() {
-            let line = line_result.unwrap();
-            v.push(line);
-        }
-        v
+        stdin.lock().lines().collect::<io::Result<Vec<String>>>()? // p. 427
     };
 
     let data = if config.is_array {
