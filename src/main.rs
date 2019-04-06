@@ -1,4 +1,4 @@
-use std::io;
+use std::io::{self, BufRead};
 use std::process;
 
 #[macro_use]
@@ -72,16 +72,10 @@ fn run(config: Config) -> io::Result<bool> {
     } else {
         // todo: simplify this section
         let mut v = vec![];
-        loop {
-            let mut buf = String::new();
-            match io::stdin().read_line(&mut buf) {
-                Ok(0) => break,
-                Ok(_) => {
-                    let _buf = &buf[..buf.len() - 1];
-                    v.push(_buf.into());
-                }
-                Err(e) => return Err(e),
-            };
+        let stdin = io::stdin();
+        for line_result in stdin.lock().lines() {
+            let line = line_result.unwrap();
+            v.push(line);
         }
         v
     };
