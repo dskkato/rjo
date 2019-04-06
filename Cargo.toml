@@ -1,6 +1,6 @@
 [package]
 authors = ["Daisuke Kato <kato.daisuke429@gmail.com>"]
-categories = ["command-line-utilities", "json"]
+categories = ["command-line-utilities"]
 description = "A small utility to create JSON objects."
 edition = "2018"
 homepage = "https://github.com/dskkato/rjo"
