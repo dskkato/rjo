@@ -10,9 +10,13 @@ The origin of this package is [jpmens/jo](https://github.com/jpmens/jo), and was
 
 ## Installation
 
-Only installation from souce is supported. You need Rust 1.30 or higher. You can then use cargo to build everything.
+Only installation from souce is supported. You may need Rust 1.30 or higher. You can then use cargo to build everything.
 
-Clone and specify local directory:
+```sh
+$ cargo install rjo
+```
+
+or, clone and specify local directory:
 
 ```sh
 $ git clone https://github.com/dskkato/rjo.git
@@ -20,11 +24,6 @@ $ cd rjo
 $ cargo install --path .
 ```
 
-Or specify the repository directly:
-
-```sh
-$ cargo install --git https://github.com/dskkato/rjo.git
-```
 
 ## Usage
 
