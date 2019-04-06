@@ -1,9 +1,14 @@
 [package]
-name = "rjo"
-version = "0.1.3"
 authors = ["Daisuke Kato <kato.daisuke429@gmail.com>"]
+categories = ["command-line-utilities", "json"]
+description = "A small utility to create JSON objects."
 edition = "2018"
-description = "rjo inspired by jo and gjo."
+homepage = "https://github.com/dskkato/rjo"
+license-file = "LICENSE"
+name = "rjo"
+readme = "README.md"
+repository = "https://github.com/dskkato/rjo"
+version = "0.1.3"
 
 [dependencies]
 clap = "2.32.0"
