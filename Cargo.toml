@@ -9,7 +9,7 @@ license = "MIT"
 name = "rjo"
 readme = "README.md"
 repository = "https://github.com/dskkato/rjo"
-version = "0.1.4"
+version = "0.1.5"
 
 [badges]
 appveyor = { repository = "https://github.com/dskkato/rjo" }
