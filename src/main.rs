@@ -8,6 +8,10 @@ extern crate clap;
 extern crate json;
 use json::JsonValue;
 
+extern crate syntect;
+mod printer;
+use printer::printer;
+
 mod app;
 use app::{configure, get_app, Config};
 
@@ -92,7 +96,7 @@ fn run(config: Config) -> io::Result<bool> {
         json::stringify(data)
     };
 
-    println!("{}", result);
+    printer(&result);
 
     Ok(true)
 }
