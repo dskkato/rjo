@@ -17,6 +17,7 @@ pub fn printer(s: &str) {
         let ranges: Vec<(Style, &str)> = h.highlight(s, &ps);
         let escaped = as_24_bit_terminal_escaped(&ranges, false);
         println!("{}", escaped);
+        print!("\x1b[0m");
     } else {
         println!("{}", s);
     }
