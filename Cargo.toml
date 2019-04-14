@@ -21,3 +21,4 @@ maintenance = { status = "experimental" }
 clap = "2.33.0"
 json = "0.11.13"
 syntect = "3.2.0"
+atty = "0.2.11"
