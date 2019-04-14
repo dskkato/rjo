@@ -19,12 +19,6 @@ pub fn printer(s: &str) {
         println!("{}", escaped);
         print!("\x1b[0m");
     } else {
-        let a = 123u8;
-        let _b = a + 8;
-        let _b = a + 8;
-        let _b = a + 8;
-        let _b = a + 8;
-        let _b = a + 8;
         println!("{}", s);
     }
 }
