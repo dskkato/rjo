@@ -1,6 +1,8 @@
 codecov:
   notify:
     require_ci_to_pass: yes
+  status:
+    patch: off
 
 coverage:
   precision: 2
