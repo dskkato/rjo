@@ -8,6 +8,7 @@ extern crate clap;
 extern crate json;
 use json::JsonValue;
 
+extern crate atty;
 extern crate syntect;
 mod printer;
 use printer::printer;
