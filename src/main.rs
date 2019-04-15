@@ -13,6 +13,9 @@ extern crate syntect;
 mod printer;
 use printer::printer;
 
+#[cfg(target_os = "windows")]
+extern crate ansi_term;
+
 mod app;
 use app::{configure, get_app, Config};
 
@@ -103,6 +106,9 @@ fn run(config: Config) -> io::Result<bool> {
 }
 
 fn main() {
+    #[cfg(target_os = "windows")]
+    let _enabled = ansi_term::enable_ansi_support();
+
     let result = {
         let matches = get_app().get_matches();
         let config = configure(&matches);
