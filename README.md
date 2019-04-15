@@ -7,6 +7,8 @@
 
 A small utility to create JSON objects.
 
+![](img/ss.png)
+
 The origin of this package is [jpmens/jo](https://github.com/jpmens/jo), and was inspired by a Golang ported version , [skanehira/gjo](https://github.com/skanehira/gjo).
 
 ## Installation
