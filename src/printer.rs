@@ -8,6 +8,9 @@ use atty::Stream;
 
 pub fn printer(s: &str) {
     if atty::is(Stream::Stdout) {
+        #[cfg(windows)]
+        let _enabled = ansi_term::enable_ansi_support();
+
         let ps = SyntaxSet::load_defaults_newlines();
         let th = dumps::from_binary(include_bytes!("../assets/Monokai.bin"));
 
