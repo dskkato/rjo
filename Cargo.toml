@@ -3,13 +3,14 @@ authors = ["Daisuke Kato <kato.daisuke429@gmail.com>"]
 categories = ["command-line-utilities"]
 description = "A small utility to create JSON objects."
 edition = "2018"
+exclude = ["img/*"]
 homepage = "https://github.com/dskkato/rjo"
 keywords = ["json"]
 license = "MIT"
 name = "rjo"
 readme = "README.md"
 repository = "https://github.com/dskkato/rjo"
-version = "0.2.0"
+version = "0.2.1"
 
 [badges]
 appveyor = { repository = "dskkato/rjo" }
