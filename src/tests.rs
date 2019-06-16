@@ -30,6 +30,15 @@ fn test_parse_number() {
 }
 
 #[test]
+fn test_do_object_with_no_arguments() {
+    let args = [];
+
+    let result = do_object(&args, false);
+    let expected = object! {};
+    assert_eq!(expected, result.unwrap());
+}
+
+#[test]
 fn test_do_object() {
     let args = [
         "a=b".to_string(),
