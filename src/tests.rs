@@ -102,6 +102,15 @@ fn test_object() {
 }
 
 #[test]
+fn test_object_with_pretty_print() {
+    let args = vec![crate_name!(), "-p", "a=b", "b=true", "c=1", "d=-1"];
+    let matches = get_app().get_matches_from(args);
+    let config = configure(&matches);
+
+    assert_eq!(true, run(config).unwrap());
+}
+
+#[test]
 fn test_disable_boolean() {
     let args = [
         "b".to_string(),
