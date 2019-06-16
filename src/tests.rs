@@ -56,6 +56,7 @@ fn test_do_object_with_warning() {
         "c=1".to_string(),
         "d=-1".to_string(),
         "d".to_string(),
+        "=d".to_string(),
     ];
 
     let result = do_object(&args, false);
