@@ -93,6 +93,15 @@ fn test_do_array() {
 }
 
 #[test]
+fn test_do_array_with_no_arguments() {
+    let args = [];
+
+    let result = do_array(&args, false);
+    let expected = array![];
+    assert_eq!(expected, result.unwrap());
+}
+
+#[test]
 fn test_array() {
     let args = vec![crate_name!(), "-a", "b", "true", "1", "-1"];
     let matches = get_app().get_matches_from(args);
