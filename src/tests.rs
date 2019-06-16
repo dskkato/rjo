@@ -49,6 +49,26 @@ fn test_do_object() {
 }
 
 #[test]
+fn test_do_object_with_warning() {
+    let args = [
+        "a=b".to_string(),
+        "b=true".to_string(),
+        "c=1".to_string(),
+        "d=-1".to_string(),
+        "d".to_string(),
+    ];
+
+    let result = do_object(&args, false);
+    let expected = object! {
+        "a" => "b",
+        "b" => true,
+        "c" => 1,
+        "d" => -1,
+    };
+    assert_eq!(expected, result.unwrap());
+}
+
+#[test]
 fn test_do_array() {
     let args = [
         "b".to_string(),
@@ -85,13 +105,14 @@ fn test_disable_boolean() {
     let args = [
         "b".to_string(),
         "true".to_string(),
+        "false".to_string(),
         "1".to_string(),
         "-1".to_string(),
     ];
     let disable_boolean = true;
 
     let result = do_array(&args, disable_boolean);
-    let expected = array!["b", "true", 1, -1];
+    let expected = array!["b", "true", "false", 1, -1];
     assert_eq!(expected, result.unwrap());
 }
 
