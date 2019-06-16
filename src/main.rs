@@ -45,7 +45,7 @@ fn parse_value(s: &str, disalbe_boolean: bool) -> JsonValue {
     }
 }
 
-fn do_object(args: &[String], disalbe_boolean: bool) -> json::Result<JsonValue> {
+fn do_object(args: &[String], disalbe_boolean: bool) -> JsonValue {
     let mut data = object! {};
 
     for el in args {
@@ -63,15 +63,15 @@ fn do_object(args: &[String], disalbe_boolean: bool) -> json::Result<JsonValue> 
         let (key, value) = (kv[0], kv[1]);
         data[key] = parse_value(value, disalbe_boolean);
     }
-    Ok(data)
+    data
 }
 
-fn do_array(args: &[String], disalbe_boolean: bool) -> json::Result<JsonValue> {
+fn do_array(args: &[String], disalbe_boolean: bool) -> JsonValue {
     let mut data = array! {};
     for value in args {
-        data.push(parse_value(value, disalbe_boolean))?;
+        data.push(parse_value(value, disalbe_boolean)).unwrap();
     }
-    Ok(data)
+    data
 }
 
 fn run(config: Config) -> io::Result<bool> {
@@ -83,15 +83,9 @@ fn run(config: Config) -> io::Result<bool> {
     };
 
     let data = if config.is_array {
-        match do_array(&args, config.disable_boolean) {
-            Ok(data) => data,
-            Err(_) => return Ok(false),
-        }
+        do_array(&args, config.disable_boolean)
     } else {
-        match do_object(&args, config.disable_boolean) {
-            Ok(data) => data,
-            Err(_) => return Ok(false),
-        }
+        do_object(&args, config.disable_boolean)
     };
 
     let result = if config.is_pretty {

@@ -30,6 +30,15 @@ fn test_parse_number() {
 }
 
 #[test]
+fn test_do_object_with_no_arguments() {
+    let args = [];
+
+    let result = do_object(&args, false);
+    let expected = object! {};
+    assert_eq!(expected, result);
+}
+
+#[test]
 fn test_do_object() {
     let args = [
         "a=b".to_string(),
@@ -45,7 +54,28 @@ fn test_do_object() {
         "c" => 1,
         "d" => -1,
     };
-    assert_eq!(expected, result.unwrap());
+    assert_eq!(expected, result);
+}
+
+#[test]
+fn test_do_object_with_warning() {
+    let args = [
+        "a=b".to_string(),
+        "b=true".to_string(),
+        "c=1".to_string(),
+        "d=-1".to_string(),
+        "d".to_string(),
+        "=d".to_string(),
+    ];
+
+    let result = do_object(&args, false);
+    let expected = object! {
+        "a" => "b",
+        "b" => true,
+        "c" => 1,
+        "d" => -1,
+    };
+    assert_eq!(expected, result);
 }
 
 #[test]
@@ -59,7 +89,16 @@ fn test_do_array() {
 
     let result = do_array(&args, false);
     let expected = array!["b", true, 1, -1];
-    assert_eq!(expected, result.unwrap());
+    assert_eq!(expected, result);
+}
+
+#[test]
+fn test_do_array_with_no_arguments() {
+    let args = [];
+
+    let result = do_array(&args, false);
+    let expected = array![];
+    assert_eq!(expected, result);
 }
 
 #[test]
@@ -81,18 +120,28 @@ fn test_object() {
 }
 
 #[test]
+fn test_object_with_pretty_print() {
+    let args = vec![crate_name!(), "-p", "a=b", "b=true", "c=1", "d=-1"];
+    let matches = get_app().get_matches_from(args);
+    let config = configure(&matches);
+
+    assert_eq!(true, run(config).unwrap());
+}
+
+#[test]
 fn test_disable_boolean() {
     let args = [
         "b".to_string(),
         "true".to_string(),
+        "false".to_string(),
         "1".to_string(),
         "-1".to_string(),
     ];
     let disable_boolean = true;
 
     let result = do_array(&args, disable_boolean);
-    let expected = array!["b", "true", 1, -1];
-    assert_eq!(expected, result.unwrap());
+    let expected = array!["b", "true", "false", 1, -1];
+    assert_eq!(expected, result);
 }
 
 #[test]
