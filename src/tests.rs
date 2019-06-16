@@ -35,7 +35,7 @@ fn test_do_object_with_no_arguments() {
 
     let result = do_object(&args, false);
     let expected = object! {};
-    assert_eq!(expected, result.unwrap());
+    assert_eq!(expected, result);
 }
 
 #[test]
@@ -54,7 +54,7 @@ fn test_do_object() {
         "c" => 1,
         "d" => -1,
     };
-    assert_eq!(expected, result.unwrap());
+    assert_eq!(expected, result);
 }
 
 #[test]
@@ -75,7 +75,7 @@ fn test_do_object_with_warning() {
         "c" => 1,
         "d" => -1,
     };
-    assert_eq!(expected, result.unwrap());
+    assert_eq!(expected, result);
 }
 
 #[test]
@@ -89,7 +89,7 @@ fn test_do_array() {
 
     let result = do_array(&args, false);
     let expected = array!["b", true, 1, -1];
-    assert_eq!(expected, result.unwrap());
+    assert_eq!(expected, result);
 }
 
 #[test]
@@ -98,7 +98,7 @@ fn test_do_array_with_no_arguments() {
 
     let result = do_array(&args, false);
     let expected = array![];
-    assert_eq!(expected, result.unwrap());
+    assert_eq!(expected, result);
 }
 
 #[test]
@@ -141,7 +141,7 @@ fn test_disable_boolean() {
 
     let result = do_array(&args, disable_boolean);
     let expected = array!["b", "true", "false", 1, -1];
-    assert_eq!(expected, result.unwrap());
+    assert_eq!(expected, result);
 }
 
 #[test]
