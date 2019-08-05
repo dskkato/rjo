@@ -1,5 +1,8 @@
 use super::*;
 
+use app::{configure, get_app};
+use json::{array, object, JsonValue};
+
 #[test]
 fn test_parse_object() {
     let s = r#"{"a":{"b":"c"}}"#;
