@@ -1,31 +1,32 @@
 use std::io::{self, BufRead};
 use std::process;
 
+// for app setting
 #[macro_use]
 extern crate clap;
 
-#[macro_use]
-extern crate json;
-use json::JsonValue;
-
+// for printer
 extern crate atty;
 extern crate syntect;
-mod printer;
-use printer::printer;
 
 #[cfg(windows)]
 extern crate ansi_term;
 
-mod app;
-use app::{configure, get_app, Config};
+// for json handling
+#[macro_use]
+extern crate json;
 
+mod app;
+mod printer;
+
+// for app test
 #[cfg(test)]
 mod tests;
 
 const TRUE_STR: &str = "true";
 const FALSE_STR: &str = "false";
 
-fn parse_value(s: &str, disalbe_boolean: bool) -> JsonValue {
+fn parse_value(s: &str, disalbe_boolean: bool) -> json::JsonValue {
     if disalbe_boolean {
         if s == TRUE_STR {
             TRUE_STR.into()
@@ -45,7 +46,7 @@ fn parse_value(s: &str, disalbe_boolean: bool) -> JsonValue {
     }
 }
 
-fn do_object(args: &[String], disalbe_boolean: bool) -> JsonValue {
+fn do_object(args: &[String], disalbe_boolean: bool) -> json::JsonValue {
     let mut data = object! {};
 
     for el in args {
@@ -66,7 +67,7 @@ fn do_object(args: &[String], disalbe_boolean: bool) -> JsonValue {
     data
 }
 
-fn do_array(args: &[String], disalbe_boolean: bool) -> JsonValue {
+fn do_array(args: &[String], disalbe_boolean: bool) -> json::JsonValue {
     let mut data = array! {};
     for value in args {
         data.push(parse_value(value, disalbe_boolean)).unwrap();
@@ -74,7 +75,7 @@ fn do_array(args: &[String], disalbe_boolean: bool) -> JsonValue {
     data
 }
 
-fn run(config: Config) -> io::Result<bool> {
+fn run(config: app::Config) -> io::Result<bool> {
     let args = if !config.args.is_empty() {
         config.args
     } else {
@@ -94,15 +95,15 @@ fn run(config: Config) -> io::Result<bool> {
         json::stringify(data)
     };
 
-    printer(&result);
+    printer::printer(&result);
 
     Ok(true)
 }
 
 fn main() {
     let result = {
-        let matches = get_app().get_matches();
-        let config = configure(&matches);
+        let matches = app::get_app().get_matches();
+        let config = app::configure(&matches);
         run(config)
     };
 
