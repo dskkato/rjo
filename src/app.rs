@@ -25,6 +25,7 @@ pub fn configure(matches: &ArgMatches) -> Config {
     }
 }
 
+#[allow(deprecated)]
 pub fn get_app() -> App<'static, 'static> {
     App::new(crate_name!())
         .version(crate_version!())
