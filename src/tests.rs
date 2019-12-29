@@ -1,6 +1,7 @@
 use super::*;
 
 use app::{configure, get_app};
+use clap::crate_name;
 use json::{array, object, JsonValue};
 
 #[test]

@@ -1,3 +1,4 @@
+use clap::{crate_authors, crate_name, crate_version};
 use clap::{App, AppSettings, Arg, ArgMatches};
 
 const WORD: &str = "word";

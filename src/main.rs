@@ -1,20 +1,7 @@
 use std::io::{self, BufRead};
 use std::process;
 
-// for app setting
-#[macro_use]
-extern crate clap;
-
-// for printer
-extern crate atty;
-extern crate syntect;
-
-#[cfg(windows)]
-extern crate ansi_term;
-
-// for json handling
-#[macro_use]
-extern crate json;
+use json::{array, object};
 
 mod app;
 mod printer;

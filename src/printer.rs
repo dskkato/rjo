@@ -1,10 +1,11 @@
+#[cfg(windows)]
+use ansi_term;
+use atty::Stream;
 use syntect::dumps;
 use syntect::easy::HighlightLines;
 use syntect::highlighting::Style;
 use syntect::parsing::SyntaxSet;
 use syntect::util::as_24_bit_terminal_escaped;
-
-use atty::Stream;
 
 pub fn printer(s: &str) {
     if atty::is(Stream::Stdout) {
