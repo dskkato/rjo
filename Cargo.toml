@@ -19,10 +19,10 @@ codecov = { repository = "dskkato/rjo" }
 maintenance = { status = "experimental" }
 
 [dependencies]
-clap = "2.33.0"
-json = "0.11.13"
-syntect = "3.2.0"
-atty = "0.2.11"
+clap = "2.33"
+json = "0.12"
+syntect = "3.3"
+atty = "0.2"
 
 [target.'cfg(windows)'.dependencies]
-ansi_term = "0.10.1"
+ansi_term = "0.12"
