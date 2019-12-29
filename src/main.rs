@@ -75,7 +75,7 @@ fn do_array(args: &[String], disalbe_boolean: bool) -> json::JsonValue {
     data
 }
 
-fn run(config: app::Config) -> io::Result<bool> {
+fn run(config: app::Config) -> io::Result<()> {
     let args = if !config.args.is_empty() {
         config.args
     } else {
@@ -97,7 +97,7 @@ fn run(config: app::Config) -> io::Result<bool> {
 
     printer::printer(&result);
 
-    Ok(true)
+    Ok(())
 }
 
 fn main() {

@@ -110,7 +110,7 @@ fn test_array() {
     let matches = get_app().get_matches_from(args);
     let config = configure(&matches);
 
-    assert_eq!(true, run(config).unwrap());
+    assert_eq!((), run(config).unwrap());
 }
 
 #[test]
@@ -119,7 +119,7 @@ fn test_object() {
     let matches = get_app().get_matches_from(args);
     let config = configure(&matches);
 
-    assert_eq!(true, run(config).unwrap());
+    assert_eq!((), run(config).unwrap());
 }
 
 #[test]
@@ -128,7 +128,7 @@ fn test_object_with_pretty_print() {
     let matches = get_app().get_matches_from(args);
     let config = configure(&matches);
 
-    assert_eq!(true, run(config).unwrap());
+    assert_eq!((), run(config).unwrap());
 }
 
 #[test]
