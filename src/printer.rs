@@ -1,5 +1,3 @@
-#[cfg(windows)]
-use ansi_term;
 use atty::Stream;
 use syntect::{
     dumps, easy::HighlightLines, highlighting::Style, parsing::SyntaxSet,
