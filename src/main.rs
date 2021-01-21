@@ -37,19 +37,22 @@ fn do_object(args: &[String], disalbe_boolean: bool) -> json::JsonValue {
     let mut data = object! {};
 
     for el in args {
-        let kv: Vec<&str> = el.splitn(2, '=').collect();
-        if kv.len() != 2 {
-            eprintln!("Warning: Argument \"{:}\" is not k=v. Skipped.", el);
-            continue;
-        }
+        let kv: Vec<&str> = el.split_whitespace().collect();
+        for kv_pair in kv {
+            let kv_pair_split: Vec<&str> = kv_pair.split("=").collect();
+            if kv_pair_split.len() != 2 {
+                eprintln!("Warning: Argument \"{:}\" is not k=v. Skipped.", kv_pair);
+                continue;
+            }
 
-        if kv[0].is_empty() {
-            eprintln!("Warning: An empty key is not allowed \"{:}\". Skipped.", el);
-            continue;
-        }
+            if kv_pair_split[0].is_empty() {
+                eprintln!("Warning: An empty key is not allowed \"{:}\". Skipped.", el);
+                continue;
+            }
 
-        let (key, value) = (kv[0], kv[1]);
-        data[key] = parse_value(value, disalbe_boolean);
+            let (key, value) = (kv_pair_split[0], kv_pair_split[1]);
+            data[key] = parse_value(value, disalbe_boolean);
+        }
     }
     data
 }
@@ -63,27 +66,41 @@ fn do_array(args: &[String], disalbe_boolean: bool) -> json::JsonValue {
 }
 
 fn run(config: app::Config) -> io::Result<()> {
-    let args = if !config.args.is_empty() {
-        config.args
+    if !config.args.is_empty() {
+        let args = config.args;
+        let data = if config.is_array {
+            do_array(&args, config.disable_boolean)
+        } else {
+            do_object(&args, config.disable_boolean)
+        };
+
+        let results = if config.is_pretty {
+            json::stringify_pretty(data, 4)
+        } else {
+            json::stringify(data)
+        };
+        
+        printer::printer(&results);
     } else {
         let stdin = io::stdin();
-        stdin.lock().lines().collect::<io::Result<Vec<String>>>()? // p. 427
-    };
 
-    let data = if config.is_array {
-        do_array(&args, config.disable_boolean)
-    } else {
-        do_object(&args, config.disable_boolean)
-    };
+        for line in stdin.lock().lines() {
+            let data = if config.is_array {
+                do_array(&[line.unwrap()], config.disable_boolean)
+            } else {
+                do_object(&[line.unwrap()], config.disable_boolean)
+            };
 
-    let result = if config.is_pretty {
-        json::stringify_pretty(data, 4)
-    } else {
-        json::stringify(data)
-    };
+            let result = if config.is_pretty {
+                json::stringify_pretty(data, 4)
+            } else {
+                json::stringify(data)
+            };
 
-    printer::printer(&result);
-
+            printer::printer(&result);
+        }
+    }
+    
     Ok(())
 }
 
