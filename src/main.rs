@@ -37,22 +37,19 @@ fn do_object(args: &[String], disalbe_boolean: bool) -> json::JsonValue {
     let mut data = object! {};
 
     for el in args {
-        let kv: Vec<&str> = el.split_whitespace().collect();
-        for kv_pair in kv {
-            let kv_pair_split: Vec<&str> = kv_pair.split("=").collect();
-            if kv_pair_split.len() != 2 {
-                eprintln!("Warning: Argument \"{:}\" is not k=v. Skipped.", kv_pair);
-                continue;
-            }
-
-            if kv_pair_split[0].is_empty() {
-                eprintln!("Warning: An empty key is not allowed \"{:}\". Skipped.", el);
-                continue;
-            }
-
-            let (key, value) = (kv_pair_split[0], kv_pair_split[1]);
-            data[key] = parse_value(value, disalbe_boolean);
+        let kv: Vec<&str> = el.splitn(2, '=').collect();
+        if kv.len() != 2 {
+            eprintln!("Warning: Argument \"{:}\" is not k=v. Skipped.", el);
+            continue;
         }
+
+        if kv[0].is_empty() {
+            eprintln!("Warning: An empty key is not allowed \"{:}\". Skipped.", el);
+            continue;
+        }
+
+        let (key, value) = (kv[0], kv[1]);
+        data[key] = parse_value(value, disalbe_boolean);
     }
     data
 }
@@ -65,42 +62,44 @@ fn do_array(args: &[String], disalbe_boolean: bool) -> json::JsonValue {
     data
 }
 
+fn process_args(args: &[String], is_array: bool, is_pretty: bool, disable_boolean: bool) {
+    let data = if is_array {
+        do_array(&args, disable_boolean)
+    } else {
+        do_object(&args, disable_boolean)
+    };
+
+    let result = if is_pretty {
+        json::stringify_pretty(data, 4)
+    } else {
+        json::stringify(data)
+    };
+
+    printer::printer(&result);
+}
+
 fn run(config: app::Config) -> io::Result<()> {
     if !config.args.is_empty() {
-        let args = config.args;
-        let data = if config.is_array {
-            do_array(&args, config.disable_boolean)
-        } else {
-            do_object(&args, config.disable_boolean)
-        };
-
-        let results = if config.is_pretty {
-            json::stringify_pretty(data, 4)
-        } else {
-            json::stringify(data)
-        };
-        
-        printer::printer(&results);
+        process_args(
+            &config.args,
+            config.is_array,
+            config.is_pretty,
+            config.disable_boolean,
+        )
     } else {
-        let stdin = io::stdin();
-
-        for line in stdin.lock().lines() {
-            let data = if config.is_array {
-                do_array(&[line.unwrap()], config.disable_boolean)
-            } else {
-                do_object(&[line.unwrap()], config.disable_boolean)
-            };
-
-            let result = if config.is_pretty {
-                json::stringify_pretty(data, 4)
-            } else {
-                json::stringify(data)
-            };
-
-            printer::printer(&result);
+        for line in io::stdin().lock().lines() {
+            if let Ok(args) = line {
+                let args: Vec<String> = args.split_whitespace().map(|s| s.to_string()).collect();
+                process_args(
+                    &args,
+                    config.is_array,
+                    config.is_pretty,
+                    config.disable_boolean,
+                );
+            }
         }
-    }
-    
+    };
+
     Ok(())
 }
 
