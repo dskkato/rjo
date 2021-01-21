@@ -1,5 +1,4 @@
 use std::io::{self, BufRead};
-use std::process;
 
 use json::{array, object};
 
@@ -78,7 +77,7 @@ fn process_args(args: &[String], is_array: bool, is_pretty: bool, disable_boolea
     printer::printer(&result);
 }
 
-fn run(config: app::Config) -> io::Result<()> {
+fn run(config: app::Config) {
     if !config.args.is_empty() {
         process_args(
             &config.args,
@@ -99,18 +98,10 @@ fn run(config: app::Config) -> io::Result<()> {
             }
         }
     };
-
-    Ok(())
 }
 
 fn main() {
-    let result = {
-        let matches = app::get_app().get_matches();
-        let config = app::configure(&matches);
-        run(config)
-    };
-
-    if result.is_err() {
-        process::exit(1);
-    }
+    let matches = app::get_app().get_matches();
+    let config = app::configure(&matches);
+    run(config)
 }

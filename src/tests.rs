@@ -111,7 +111,7 @@ fn test_array() {
     let matches = get_app().get_matches_from(args);
     let config = configure(&matches);
 
-    assert_eq!((), run(config).unwrap());
+    assert_eq!((), run(config));
 }
 
 #[test]
@@ -120,7 +120,7 @@ fn test_object() {
     let matches = get_app().get_matches_from(args);
     let config = configure(&matches);
 
-    assert_eq!((), run(config).unwrap());
+    assert_eq!((), run(config));
 }
 
 #[test]
@@ -129,7 +129,7 @@ fn test_object_with_pretty_print() {
     let matches = get_app().get_matches_from(args);
     let config = configure(&matches);
 
-    assert_eq!((), run(config).unwrap());
+    assert_eq!((), run(config));
 }
 
 #[test]
@@ -154,5 +154,5 @@ fn test_disable_boolean_run() {
     let matches = get_app().get_matches_from(args);
     let config = configure(&matches);
 
-    run(config).unwrap();
+    run(config);
 }
