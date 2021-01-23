@@ -21,7 +21,7 @@ maintenance = { status = "experimental" }
 [dependencies]
 clap = "2.33"
 json = "0.12"
-syntect = "3.3"
+syntect = "4.4"
 atty = "0.2"
 
 [target.'cfg(windows)'.dependencies]
