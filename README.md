@@ -70,6 +70,23 @@ $ rjo -p name=JP object=$(rjo fruit=Orange point=$(rjo x=10 y=20) number=17) sun
 }
 ```
 
+### multiple lines from `stdin`
+
+Currently, `jo` assumes one x=y pair per line when reads from stdin, and multiple x=y pairs generate following results:
+
+```sh
+echo -e "a=b c=d \n e=f g=h" | jo
+{"a":"b c=d "," e":"f g=h"}
+```
+
+While, `rjo` translates `stdin` input line by line:
+
+```
+echo -e "a=b c=d \n e=f g=h" | rjo
+{"a":"b","c":"d"}
+{"e":"f","g":"h"}
+```
+
 ## See also
 * [jo](https://github.com/jpmens/jo)
 * [gjo](https://github.com/skanehira/gjo)
